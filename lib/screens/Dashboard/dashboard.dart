@@ -17,9 +17,6 @@ class Dashboard extends StatelessWidget {
               context.read<AuthenticationService>().signOut();
             },
           ),
-          Center(
-            child: Text("HI BIYCHES"),
-          ),
         ],
       ),
     );

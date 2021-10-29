@@ -14,7 +14,7 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
-  final emailController = TextEditingController();
+  final nameController = TextEditingController();
   final passwordController = TextEditingController();
 
   @override
@@ -35,7 +35,7 @@ class _LogInPageState extends State<LogInPage> {
                 ),
                 TextFormField(
                   decoration: authTextFieldDecoration,
-                  controller: emailController,
+                  controller: nameController,
                   keyboardType: TextInputType.emailAddress,
                 ),
                 SizedBox(
@@ -58,7 +58,7 @@ class _LogInPageState extends State<LogInPage> {
                     color: Color(0xFF004AAD),
                     onPressed: () {
                       context.read<AuthenticationService>().signIn(
-                          name: emailController.text.trim(),
+                          name: nameController.text.trim(),
                           password: passwordController.text.trim());
                     },
                     text: "LOG IN",
