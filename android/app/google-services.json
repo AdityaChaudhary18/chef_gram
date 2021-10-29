@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "107797964777",
+    "project_id": "chefgram",
+    "storage_bucket": "chefgram.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107797964777:android:be08583c3cda6e58294d78",
+        "android_client_info": {
+          "package_name": "com.example.chef_gram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "107797964777-sm00745s860mutfkiijo9h1qorc2ola2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chef_gram",
+            "certificate_hash": "39f1cf19c2f085d8e7c735405b51ab9ac2539534"
+          }
+        },
+        {
+          "client_id": "107797964777-rb0qn2lkmdo3cg7fpqas5ts5s8ss9e4k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoBPWwk2uIPKJ_jSFw-I7B1dGrfiyxNog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "107797964777-rb0qn2lkmdo3cg7fpqas5ts5s8ss9e4k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
