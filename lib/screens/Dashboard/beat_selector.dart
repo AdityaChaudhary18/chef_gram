@@ -12,11 +12,22 @@ class BeatSelector extends StatefulWidget {
 }
 
 class _BeatSelectorState extends State<BeatSelector> {
-  String state = 'none';
+  var state;
+  var city;
+  var beat;
 
-  String city = 'none';
-
-  String beat = 'none';
+  List<String> states = <String>[
+    "UP",
+    "Bihar",
+  ];
+  List<String> cities = <String>[
+    "C1",
+    "C2",
+  ];
+  List<String> beats = <String>[
+    "B1",
+    "B2",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -24,76 +35,83 @@ class _BeatSelectorState extends State<BeatSelector> {
       child: Scaffold(
         body: Column(
           children: [
+            Padding(
+              padding: EdgeInsets.only(left: 2.w),
+              child: DropdownButton<String>(
+                value: state,
+                icon: Icon(Icons.keyboard_arrow_down),
+                iconSize: 28,
+                elevation: 20,
+                onChanged: (String? newval) {
+                  setState(() {
+                    state = newval;
+                  });
+                },
+                items: states.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 2.w),
+              child: DropdownButton<String>(
+                value: city,
+                icon: Icon(Icons.keyboard_arrow_down),
+                iconSize: 28,
+                elevation: 20,
+                onChanged: (String? newval) {
+                  setState(() {
+                    city = newval;
+                  });
+                },
+                items: cities.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 2.w),
+              child: DropdownButton<String>(
+                value: beat,
+                icon: Icon(Icons.keyboard_arrow_down),
+                iconSize: 28,
+                elevation: 20,
+                onChanged: (String? newval) {
+                  setState(() {
+                    beat = newval;
+                  });
+                },
+                items: beats.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
             ElevatedButton(
               child: Text("Done"),
               onPressed: () {
                 print(state);
                 print(city);
                 print(beat);
-
-                if (state != "none" && city != "none" && beat != "none") {
-                  Navigator.pushReplacement(
+                if (state!=null && city!=null && beat!=null)
+                  Navigator.push(
                     context,
                     MaterialPageRoute<void>(
-                      builder: (BuildContext context) => const Dashboard(),
+                      builder: (context) => Dashboard(),
                     ),
                   );
-                }
               },
-            ),
-            dropDown(
-              hint: "State",
-              items: <String>[
-                'UP',
-                'Bihar',
-              ],
-            ),
-            dropDown(
-              hint: "City",
-              items: <String>[
-                'City1',
-                'City2',
-              ],
-            ),
-            dropDown(
-              hint: "Beat",
-              items: <String>[
-                'Nagar1',
-                'Nagar2',
-              ],
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Padding dropDown({required String hint, required List items}) {
-    return Padding(
-      padding: EdgeInsets.only(left: 2.w),
-      child: DropdownButton<String>(
-        icon: const Icon(Icons.arrow_drop_down),
-        hint: Text(hint),
-        iconSize: 24,
-        elevation: 16,
-        style: const TextStyle(color: Colors.black),
-        underline: Container(
-          height: 2,
-          color: Colors.blueGrey,
-        ),
-        onChanged: (String? newValue) {
-          setState(() {
-            if (hint == "State") state = newValue!;
-            if (hint == "City") city = newValue!;
-            if (hint == "Beat") beat = newValue!;
-          });
-        },
-        items: items.map<DropdownMenuItem<String>>((value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
       ),
     );
   }

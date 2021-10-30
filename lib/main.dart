@@ -32,7 +32,15 @@ class MyApp extends StatelessWidget {
           create: (context) =>
               context.read<AuthenticationService>().authStateChanges,
           initialData: null,
-        )
+        ),
+        Provider<DatabaseService>(
+          create: (_) => DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid),
+        ),
+        StreamProvider(
+          create: (context) =>
+          context.read<DatabaseService>().profile,
+          initialData: Profile(name: '', age: 0),
+        ),
       ],
       child: Sizer(builder: (context, orientation, deviceTye) {
         return MaterialApp(
@@ -62,11 +70,7 @@ class AuthenticationWrapper extends StatelessWidget {
     if (firebaseUser == null) {
       return LogInPage();
     } else {
-      return StreamProvider<Profile>.value(
-        value: DatabaseService(uid: firebaseUser.uid).profile,
-        initialData: Profile(name: '', age: 0),
-        child: BeatSelector(),
-      );
+      return BeatSelector();
     }
   }
 }
