@@ -43,7 +43,7 @@ class _LogInPageState extends State<LogInPage> {
                 ),
                 TextFormField(
                   controller: passwordController,
-                  textAlign: TextAlign.center,
+                  obscureText: true,
                   decoration: authTextFieldDecoration.copyWith(
                     labelText: "Password",
                     hintText: "Enter your Password",
