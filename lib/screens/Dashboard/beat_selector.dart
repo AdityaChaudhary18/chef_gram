@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:chef_gram/screens/Dashboard/dashboard.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -12,22 +13,56 @@ class BeatSelector extends StatefulWidget {
 }
 
 class _BeatSelectorState extends State<BeatSelector> {
+  static CollectionReference stateCollection =
+      FirebaseFirestore.instance.collection('states');
   var state;
   var city;
   var beat;
 
-  List<String> states = <String>[
-    "UP",
-    "Bihar",
-  ];
-  List<String> cities = <String>[
-    "C1",
-    "C2",
-  ];
-  List<String> beats = <String>[
-    "B1",
-    "B2",
-  ];
+  Map<String, dynamic> stateMap = {};
+  Map<String, dynamic> cityMap = {};
+  List<String> beats = [];
+
+  void getStates() async {
+    Map<String, dynamic> _stateMap = {};
+    var statesRef = await stateCollection.get();
+    statesRef.docs.forEach((state) {
+      _stateMap[state.get('stateName')] = state.get('cities');
+    });
+    setState(() {
+      stateMap = _stateMap;
+    });
+    print(stateMap);
+  }
+  Future<void> getCities() async {
+    Map<String, dynamic> _cityMap = {};
+    List cityList = stateMap[state];
+    for (DocumentReference city in cityList) {
+      var cityDoc = await FirebaseFirestore.instance.doc(city.path).get();
+      print(cityDoc.get('cityName'));
+      _cityMap[cityDoc.get('cityName')] = cityDoc.get('beats');
+    }
+    setState(() {
+      cityMap = _cityMap;
+    });
+  }
+  Future<void> getBeat() async {
+    List<String> _beats = [];
+    List beatList = cityMap[city];
+    for (DocumentReference beat in beatList) {
+      var beatDoc = await FirebaseFirestore.instance.doc(beat.path).get();
+      _beats.add(beatDoc.get('beatName'));
+    }
+    setState(() {
+      beats = _beats;
+    });
+  }
+
+  @override
+  void initState() {
+    getStates();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +81,9 @@ class _BeatSelectorState extends State<BeatSelector> {
                   setState(() {
                     state = newval;
                   });
+                  getCities();
                 },
-                items: states.map<DropdownMenuItem<String>>((String value) {
+                items: stateMap.keys.toList().map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
@@ -66,8 +102,9 @@ class _BeatSelectorState extends State<BeatSelector> {
                   setState(() {
                     city = newval;
                   });
+                  getBeat();
                 },
-                items: cities.map<DropdownMenuItem<String>>((String value) {
+                items: cityMap.keys.toList().map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
@@ -98,10 +135,7 @@ class _BeatSelectorState extends State<BeatSelector> {
             ElevatedButton(
               child: Text("Done"),
               onPressed: () {
-                print(state);
-                print(city);
-                print(beat);
-                if (state!=null && city!=null && beat!=null)
+                if (state != null && city != null && beat != null)
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(

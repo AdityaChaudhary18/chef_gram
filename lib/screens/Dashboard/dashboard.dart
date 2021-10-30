@@ -1,4 +1,5 @@
 import 'package:chef_gram/models/profile_model.dart';
+import 'package:chef_gram/screens/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/src/provider.dart';
@@ -20,6 +21,9 @@ class Dashboard extends StatelessWidget {
                 child: Text("Sign Out"),
                 onPressed: () {
                   context.read<AuthenticationService>().signOut();
+                  MaterialPageRoute<void>(
+                    builder: (context) => LogInPage(),
+                  );
                 },
               ),
               Text(profile.name),
