@@ -1,4 +1,5 @@
 import 'package:chef_gram/authentication_service.dart';
+import 'package:chef_gram/database_service.dart';
 import 'package:chef_gram/screens/Dashboard/dashboard.dart';
 import 'package:chef_gram/screens/auth/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,9 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import 'models/profile_model.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  Provider.debugCheckInvalidValueType=null;
   runApp(const MyApp());
 }
 
@@ -25,7 +29,9 @@ class MyApp extends StatelessWidget {
         ),
         StreamProvider(
           create: (context) =>
-              context.read<AuthenticationService>().authStateChanges,
+          context
+              .read<AuthenticationService>()
+              .authStateChanges,
           initialData: null,
         )
       ],
@@ -57,7 +63,11 @@ class AuthenticationWrapper extends StatelessWidget {
     if (firebaseUser == null) {
       return LogInPage();
     } else {
-      return Dashboard();
+      return StreamProvider<Profile>.value(
+          value: DatabaseService(uid: firebaseUser.uid).profile,
+          initialData: Profile(name: '', age: 0),
+          child: Dashboard(),
+      );
     }
   }
 }

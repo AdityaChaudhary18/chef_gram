@@ -1,4 +1,6 @@
+import 'package:chef_gram/models/profile_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:provider/src/provider.dart';
 
 import '../../authentication_service.dart';
@@ -9,15 +11,22 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          ElevatedButton(
-            child: Text("Sign Out"),
-            onPressed: () {
-              context.read<AuthenticationService>().signOut();
-            },
-          ),
-        ],
+      body: Consumer<Profile>(
+        builder: (context, profile, child) {
+          print(profile);
+          return Column(
+            children: [
+              ElevatedButton(
+                child: Text("Sign Out"),
+                onPressed: () {
+                  context.read<AuthenticationService>().signOut();
+                },
+              ),
+              Text(profile.name),
+              Text('${profile.age}'),
+            ],
+          );
+        }
       ),
     );
   }
