@@ -34,12 +34,19 @@ class DatabaseService {
   void updateTodayTarget(String state, String city, String beat) async{
     var beatDoc = await _beatCollection.doc(beat.replaceAll(' ','')).get();
     List shops = beatDoc.get('shops');
+    List<Map<String, dynamic>> shopsToVisit = [];
+    shops.forEach((shop) {
+      Map<String, dynamic> shopData = new Map();
+      shopData['isVisited'] = false;
+      shopData['shopRef'] = shop;
+      shopsToVisit.add(shopData);
+    });
     _profileCollection.doc(uid).update({
       'state': state,
       'city': city,
       'beat': beat,
       'timeTargetUpdated': DateTime.now(),
-      'shopsToVisit' : shops,
+      'shopsToVisit' : shopsToVisit,
     });
   }
 }
