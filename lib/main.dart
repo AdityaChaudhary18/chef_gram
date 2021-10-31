@@ -34,16 +34,17 @@ class MyApp extends StatelessWidget {
           initialData: null,
         ),
         Provider<DatabaseService>(
-          create: (_) => DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid),
+          create: (_) =>
+              DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid),
         ),
         StreamProvider(
-          create: (context) =>
-          context.read<DatabaseService>().profile,
+          create: (context) => context.read<DatabaseService>().profile,
           initialData: Profile(name: '', age: 0),
         ),
       ],
       child: Sizer(builder: (context, orientation, deviceTye) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: "Chef Gram",
           theme: ThemeData(
             fontFamily: 'WorkSans',

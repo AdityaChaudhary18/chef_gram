@@ -23,26 +23,31 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<Profile>(
-        builder: (context, profile, child) {
-          return Column(
-            children: [
-              ElevatedButton(
-                child: Text("Sign Out"),
-                onPressed: () {
-                  context.read<AuthenticationService>().signOut();
-                  MaterialPageRoute<void>(
-                    builder: (context) => LogInPage(),
-                  );
-                },
-              ),
-              Text(profile.name),
-              Text('${profile.age}'),
-              Text('${profile.city}'),
-            ],
-          );
-        }
+      appBar: AppBar(
+        elevation: 10,
+        title: Text("Dashboard"),
+        actions: [
+          ElevatedButton(
+            style: ButtonStyle(elevation: MaterialStateProperty.all(0.0)),
+            child: Icon(Icons.logout),
+            onPressed: () {
+              context.read<AuthenticationService>().signOut();
+              MaterialPageRoute<void>(
+                builder: (context) => LogInPage(),
+              );
+            },
+          ),
+        ],
       ),
+      body: Consumer<Profile>(builder: (context, profile, child) {
+        return Column(
+          children: [
+            Text(profile.name),
+            Text('${profile.age}'),
+            Text('${profile.city}'),
+          ],
+        );
+      }),
     );
   }
 }

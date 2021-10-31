@@ -75,7 +75,10 @@ class _BeatSelectorState extends State<BeatSelector> {
     return SafeArea(
       child: Scaffold(
         body: Consumer<Profile>(builder: (context, profile, child) {
-          if (profile.state != '' && profile.city != '' && profile.beat != '' && profile.timeTargetUpdated?.toDate().day == DateTime.now().day) {
+          if (profile.state != '' &&
+              profile.city != '' &&
+              profile.beat != '' &&
+              profile.timeTargetUpdated?.toDate().day == DateTime.now().day) {
             return Dashboard();
           } else
             return Column(
@@ -156,7 +159,7 @@ class _BeatSelectorState extends State<BeatSelector> {
                       context
                           .read<DatabaseService>()
                           .updateTodayTarget(state, city, beat);
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute<void>(
                           builder: (context) => Dashboard(),
