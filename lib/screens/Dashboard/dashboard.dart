@@ -17,12 +17,12 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  List<Map<String, dynamic>> shopDetails = [];
 
-  Future<void> getShops() async {
+  Future<List> getShops() async {
+    List<Map<String, dynamic>> shopDetails = [];
     shopDetails.clear();
     for (var shop
-        in Provider.of<DatabaseService>(context, listen: false).shopsToVisit) {
+        in Provider.of<DatabaseService>(context).shopsToVisit) {
       await FirebaseFirestore.instance.doc(shop["shopRef"].path).get().then(
             (value) => shopDetails.add({
               "shopName": value["shopName"],
@@ -30,19 +30,16 @@ class _DashboardState extends State<Dashboard> {
             }),
           );
     }
+    return shopDetails;
   }
 
   @override
   void initState() {
-    getShops();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (shopDetails.isEmpty) {
-      return CircularProgressIndicator();
-    }
     return Scaffold(
       appBar: AppBar(
         elevation: 10,
@@ -70,36 +67,49 @@ class _DashboardState extends State<Dashboard> {
       body: Column(
         children: [
           Container(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: shopDetails.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(3.w),
-                    ),
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 1.w, vertical: 1.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            shopDetails[index]['shopName'],
-                            style: TextStyle(fontSize: 18.sp),
+            child: FutureBuilder(
+              future: getShops(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (!snapshot.hasData) {
+                  return Column(
+                    children: [
+                      Text('No DATA'),
+                    ],
+                  );
+                } else {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(3.w),
                           ),
-                          Text(shopDetails[index]['shopOwner']),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+                          child: Padding(
+                            padding:
+                            EdgeInsets.symmetric(horizontal: 1.w, vertical: 1.h),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  snapshot.data[index]['shopName'],
+                                  style: TextStyle(fontSize: 18.sp),
+                                ),
+                                Text(snapshot.data[index]['shopOwner']),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
               },
             ),
           ),
@@ -108,3 +118,5 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
+
+

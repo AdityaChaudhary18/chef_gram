@@ -159,12 +159,6 @@ class _BeatSelectorState extends State<BeatSelector> {
                       context
                           .read<DatabaseService>()
                           .updateTodayTarget(state, city, beat);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (context) => Dashboard(),
-                        ),
-                      );
                     }
                   },
                 ),

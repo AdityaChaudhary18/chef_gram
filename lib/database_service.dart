@@ -42,12 +42,12 @@ class DatabaseService {
     shopsToVisit.clear();
     var beatDoc = await _beatCollection.doc(beat.replaceAll(' ', '')).get();
     List shops = beatDoc.get('shops');
-    shops.forEach((shop) {
+    for (var shop in shops) {
       Map<String, dynamic> shopData = new Map();
       shopData['isVisited'] = false;
       shopData['shopRef'] = shop;
       shopsToVisit.add(shopData);
-    });
+    }
     _profileCollection.doc(uid).update({
       'state': state,
       'city': city,
@@ -55,5 +55,17 @@ class DatabaseService {
       'timeTargetUpdated': DateTime.now(),
       'shopsToVisit': shopsToVisit,
     });
+
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute<void>(
+    //     builder: (context) => Dashboard(),
+    //   ),
+    // );
   }
+
+  // Future<List> getShopsToVisit() async{
+  //   var document = await _profileCollection.doc(uid).get();
+  //   return document.get('shopsToVisit');;
+  // }
 }
