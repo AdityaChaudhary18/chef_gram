@@ -9,6 +9,8 @@ class DatabaseService {
     required this.uid,
   });
 
+  List _shopsToVisit = [];
+
   static CollectionReference _profileCollection =
       FirebaseFirestore.instance.collection('users');
 
@@ -22,9 +24,8 @@ class DatabaseService {
     return _profileCollection.doc(uid).snapshots().map(_profileFromSnapshot);
   }
 
-  Profile profileEmp = Profile(name: '', age: 0);
-
   Profile _profileFromSnapshot(DocumentSnapshot snapshot) {
+    _shopsToVisit = snapshot.get('shopsToVisit');
     return Profile(
       name: snapshot.get('name') ?? '',
       age: snapshot.get('age') ?? '',
@@ -38,30 +39,35 @@ class DatabaseService {
   }
 
   void updateTodayTarget(String state, String city, String beat) async {
+    _shopsToVisit.clear();
     var beatDoc = await _beatCollection.doc(beat.replaceAll(' ', '')).get();
     List shops = beatDoc.get('shops');
-    List<Map<String, dynamic>> shopsToVisit = [];
     shops.forEach((shop) {
       Map<String, dynamic> shopData = new Map();
       shopData['isVisited'] = false;
       shopData['shopRef'] = shop;
-      shopsToVisit.add(shopData);
+      _shopsToVisit.add(shopData);
     });
     _profileCollection.doc(uid).update({
       'state': state,
       'city': city,
       'beat': beat,
       'timeTargetUpdated': DateTime.now(),
-      'shopsToVisit': shopsToVisit,
+      'shopsToVisit': _shopsToVisit,
     });
   }
 
-  Map<String, dynamic> shopMap = {};
-
-  void getShopsToVisit(List shopsToVisit) {
-    shopsToVisit.forEach((shop) async {
+  Future<List<Map<String, dynamic>>> getShopsToVisit() async {
+    print("1 $_shopsToVisit");
+    List<Map<String, dynamic>> shopList = [];
+    _shopsToVisit.forEach((shop) async {
       var shopDoc = await _shopCollection.doc(shop['shopRef'].id).get();
-      print(shopDoc);
+      shopList.add(
+          {"shopName": shopDoc['shopName'], 'shopOwner': shopDoc['shopOwner']});
+      print(shopList);
     });
+    print("2 $shopList");
+    return shopList;
+    // print(shopList);
   }
 }

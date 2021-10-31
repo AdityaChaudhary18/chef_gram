@@ -15,11 +15,25 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  bool isLoading = true;
+  List<Map<String, dynamic>> shopList = [];
+
+  void getShopsToVisitToday() async {
+    shopList = await context.read<DatabaseService>().getShopsToVisit();
+    print(isLoading);
+    if (shopList.length != 0) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   void initState() {
-    context.read<DatabaseService>().getShopsToVisit(Provider.of<Profile>(context, listen: false).shopsToVisit??[]);
+    getShopsToVisitToday();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +41,8 @@ class _DashboardState extends State<Dashboard> {
         elevation: 10,
         title: Text("Dashboard"),
         actions: [
+          ElevatedButton(onPressed: (){
+          }, child: Text(isLoading.toString())),
           ElevatedButton(
             style: ButtonStyle(elevation: MaterialStateProperty.all(0.0)),
             child: Icon(Icons.logout),
@@ -40,11 +56,17 @@ class _DashboardState extends State<Dashboard> {
         ],
       ),
       body: Consumer<Profile>(builder: (context, profile, child) {
+        if (isLoading) {
+          print('hello');
+          // getShopsToVisitToday();
+          return CircularProgressIndicator();
+        }
         return Column(
           children: [
             Text(profile.name),
             Text('${profile.age}'),
             Text('${profile.city}'),
+            Text(shopList[0]['shopName']),
           ],
         );
       }),
