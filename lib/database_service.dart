@@ -12,6 +12,9 @@ class DatabaseService {
   static CollectionReference _profileCollection =
       FirebaseFirestore.instance.collection('users');
 
+  static CollectionReference _beatCollection =
+  FirebaseFirestore.instance.collection('beats');
+
   Stream<Profile> get profile {
     return _profileCollection.doc(uid).snapshots().map(_profileFromSnapshot);
   }
@@ -24,15 +27,19 @@ class DatabaseService {
       city: snapshot.get('city') ?? '',
       beat: snapshot.get('beat') ?? '',
       timeTargetUpdated: snapshot.get('timeTargetUpdated'),
+      shopsToVisit: snapshot.get('shopsToVisit') ?? [],
     );
   }
 
-  void updateTodayTarget(String state, String city, String beat) {
+  void updateTodayTarget(String state, String city, String beat) async{
+    var beatDoc = await _beatCollection.doc(beat.replaceAll(' ','')).get();
+    List shops = beatDoc.get('shops');
     _profileCollection.doc(uid).update({
       'state': state,
       'city': city,
       'beat': beat,
       'timeTargetUpdated': DateTime.now(),
+      'shopsToVisit' : shops,
     });
   }
 }

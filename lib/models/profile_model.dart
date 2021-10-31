@@ -7,6 +7,7 @@ class Profile {
   String? city;
   String? state;
   Timestamp? timeTargetUpdated;
+  List? shopsToVisit;
 
   Profile(
       {required this.name,
@@ -14,7 +15,8 @@ class Profile {
       this.city,
       this.state,
       this.beat,
-      this.timeTargetUpdated});
+      this.timeTargetUpdated,
+      this.shopsToVisit});
 
   Profile.fromJson(Map<String, dynamic>? json)
       : name = json!['name'],
@@ -22,5 +24,6 @@ class Profile {
         city = json['city'],
         state = json['state'],
         beat = json['beat'],
-        timeTargetUpdated = json['timeTargetUpdated'];
+        timeTargetUpdated = json['timeTargetUpdated'],
+        shopsToVisit = json['shopsToVisit'] ?? [];
 }
