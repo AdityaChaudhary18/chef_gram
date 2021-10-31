@@ -13,11 +13,16 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('users');
 
   static CollectionReference _beatCollection =
-  FirebaseFirestore.instance.collection('beats');
+      FirebaseFirestore.instance.collection('beats');
+
+  static CollectionReference _shopCollection =
+      FirebaseFirestore.instance.collection('shops');
 
   Stream<Profile> get profile {
     return _profileCollection.doc(uid).snapshots().map(_profileFromSnapshot);
   }
+
+  Profile profileEmp = Profile(name: '', age: 0);
 
   Profile _profileFromSnapshot(DocumentSnapshot snapshot) {
     return Profile(
@@ -26,13 +31,14 @@ class DatabaseService {
       state: snapshot.get('state') ?? '',
       city: snapshot.get('city') ?? '',
       beat: snapshot.get('beat') ?? '',
-      timeTargetUpdated: snapshot.get('timeTargetUpdated') ?? DateTime.now().subtract(Duration(days: 1)),
+      timeTargetUpdated: snapshot.get('timeTargetUpdated') ??
+          DateTime.now().subtract(Duration(days: 1)),
       shopsToVisit: snapshot.get('shopsToVisit') ?? [],
     );
   }
 
-  void updateTodayTarget(String state, String city, String beat) async{
-    var beatDoc = await _beatCollection.doc(beat.replaceAll(' ','')).get();
+  void updateTodayTarget(String state, String city, String beat) async {
+    var beatDoc = await _beatCollection.doc(beat.replaceAll(' ', '')).get();
     List shops = beatDoc.get('shops');
     List<Map<String, dynamic>> shopsToVisit = [];
     shops.forEach((shop) {
@@ -46,7 +52,16 @@ class DatabaseService {
       'city': city,
       'beat': beat,
       'timeTargetUpdated': DateTime.now(),
-      'shopsToVisit' : shopsToVisit,
+      'shopsToVisit': shopsToVisit,
+    });
+  }
+
+  Map<String, dynamic> shopMap = {};
+
+  void getShopsToVisit(List shopsToVisit) {
+    shopsToVisit.forEach((shop) async {
+      var shopDoc = await _shopCollection.doc(shop['shopRef'].id).get();
+      print(shopDoc);
     });
   }
 }

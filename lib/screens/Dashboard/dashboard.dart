@@ -5,10 +5,21 @@ import 'package:provider/provider.dart';
 import 'package:provider/src/provider.dart';
 
 import '../../authentication_service.dart';
+import '../../database_service.dart';
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
 
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  @override
+  void initState() {
+    context.read<DatabaseService>().getShopsToVisit(Provider.of<Profile>(context, listen: false).shopsToVisit??[]);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

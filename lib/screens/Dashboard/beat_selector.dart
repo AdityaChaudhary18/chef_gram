@@ -39,6 +39,7 @@ class _BeatSelectorState extends State<BeatSelector> {
   }
 
   Future<void> getCities() async {
+    cityMap.clear();
     Map<String, dynamic> _cityMap = {};
     List cityList = stateMap[state];
     for (DocumentReference city in cityList) {
@@ -51,6 +52,7 @@ class _BeatSelectorState extends State<BeatSelector> {
   }
 
   Future<void> getBeat() async {
+    beats.clear();
     List<String> _beats = [];
     List beatList = cityMap[city];
     for (DocumentReference beat in beatList) {
@@ -88,6 +90,8 @@ class _BeatSelectorState extends State<BeatSelector> {
                     onChanged: (String? newval) {
                       setState(() {
                         state = newval;
+                        city = null;
+                        beat = null;
                       });
                       getCities();
                     },
@@ -111,6 +115,7 @@ class _BeatSelectorState extends State<BeatSelector> {
                     onChanged: (String? newval) {
                       setState(() {
                         city = newval;
+                        beat = null;
                       });
                       getBeat();
                     },
