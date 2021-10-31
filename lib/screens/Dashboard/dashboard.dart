@@ -14,7 +14,6 @@ class Dashboard extends StatelessWidget {
     return Scaffold(
       body: Consumer<Profile>(
         builder: (context, profile, child) {
-          print(profile);
           return Column(
             children: [
               ElevatedButton(
@@ -28,6 +27,7 @@ class Dashboard extends StatelessWidget {
               ),
               Text(profile.name),
               Text('${profile.age}'),
+              Text('${profile.city}'),
             ],
           );
         }
