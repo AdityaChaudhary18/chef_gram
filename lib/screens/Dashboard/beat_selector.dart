@@ -36,7 +36,6 @@ class _BeatSelectorState extends State<BeatSelector> {
     setState(() {
       stateMap = _stateMap;
     });
-    print(stateMap);
   }
 
   Future<void> getCities() async {
@@ -44,7 +43,6 @@ class _BeatSelectorState extends State<BeatSelector> {
     List cityList = stateMap[state];
     for (DocumentReference city in cityList) {
       var cityDoc = await FirebaseFirestore.instance.doc(city.path).get();
-      print(cityDoc.get('cityName'));
       _cityMap[cityDoc.get('cityName')] = cityDoc.get('beats');
     }
     setState(() {
@@ -75,7 +73,7 @@ class _BeatSelectorState extends State<BeatSelector> {
     return SafeArea(
       child: Scaffold(
         body: Consumer<Profile>(builder: (context, profile, child) {
-          if (profile.state != '' && profile.city != '' && profile.beat != '' && profile.timeTargetUpdated!.toDate().day == DateTime.now().day) {
+          if (profile.state != '' && profile.city != '' && profile.beat != '' && profile.timeTargetUpdated?.toDate().day == DateTime.now().day) {
             return Dashboard();
           } else
             return Column(

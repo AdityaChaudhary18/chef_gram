@@ -26,7 +26,7 @@ class DatabaseService {
       state: snapshot.get('state') ?? '',
       city: snapshot.get('city') ?? '',
       beat: snapshot.get('beat') ?? '',
-      timeTargetUpdated: snapshot.get('timeTargetUpdated'),
+      timeTargetUpdated: snapshot.get('timeTargetUpdated') ?? DateTime.now().subtract(Duration(days: 1)),
       shopsToVisit: snapshot.get('shopsToVisit') ?? [],
     );
   }
