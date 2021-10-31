@@ -26,7 +26,8 @@ class _DashboardState extends State<Dashboard> {
       await FirebaseFirestore.instance.doc(shop["shopRef"].path).get().then(
             (value) => shopDetails.add({
               "shopName": value["shopName"],
-              "shopOwner": value["shopOwner"]
+              "shopOwner": value["shopOwner"],
+              'isVisited': shop['isVisited']
             }),
           );
     }
@@ -102,6 +103,7 @@ class _DashboardState extends State<Dashboard> {
                                   style: TextStyle(fontSize: 18.sp),
                                 ),
                                 Text(snapshot.data[index]['shopOwner']),
+                                Text(snapshot.data[index]['isVisited'].toString()),
                               ],
                             ),
                           ),
