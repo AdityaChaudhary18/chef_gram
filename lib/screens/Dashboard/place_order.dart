@@ -16,10 +16,8 @@ class PlaceOrder extends StatefulWidget {
 }
 
 class _PlaceOrderState extends State<PlaceOrder> {
-  // final customerNameController = TextEditingController();
   final addressController = TextEditingController();
 
-  // final shopNameController = TextEditingController();
   CollectionReference orders = FirebaseFirestore.instance.collection('orders');
   var user =
       FirebaseFirestore.instance.collection('users').doc(auth.currentUser!.uid);
@@ -84,39 +82,39 @@ class _PlaceOrderState extends State<PlaceOrder> {
                 SizedBox(
                   height: 4.h,
                 ),
-                Text(widget.order.customerName),
-                // TextFormField(
-                //   initialValue: widget.order.customerName,
-                //   controller: customerNameController,
-                //   textAlign: TextAlign.center,
-                //   decoration: authTextFieldDecoration.copyWith(
-                //     labelText: "Customer Name",
-                //     hintText: "Enter Customer's Full Name",
-                //   ),
-                // ),
-                SizedBox(
-                  height: 2.h,
-                ),
-                Text(widget.order.shopName),
-                // TextFormField(
-                //   initialValue: widget.order.shopName,
-                //   controller: shopNameController,
-                //   textAlign: TextAlign.center,
-                //   decoration: authTextFieldDecoration.copyWith(
-                //     labelText: "Shop Name",
-                //     hintText: "Enter Shop's Name",
-                //   ),
-                // ),
-                SizedBox(
-                  height: 2.h,
-                ),
-                TextFormField(
-                  controller: addressController,
-                  textAlign: TextAlign.center,
-                  decoration: authTextFieldDecoration.copyWith(
-                    labelText: "Address",
-                    hintText: "Enter Shop Address",
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 50.w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.order.shopName,
+                            style: TextStyle(
+                                fontSize: 12.sp, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "A2-401 Eldeco Elegance Vibhuti Khand Gomti Nagar Lucknow",
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Ordering for,"),
+                        Text(
+                          "${widget.order.customerName}",
+                          style: TextStyle(
+                              fontSize: 14.sp, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 2.h,
@@ -126,6 +124,9 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   style: TextStyle(
                     fontSize: 20.sp,
                   ),
+                ),
+                SizedBox(
+                  height: 2.h,
                 ),
                 Container(
                   width: 100.w,
