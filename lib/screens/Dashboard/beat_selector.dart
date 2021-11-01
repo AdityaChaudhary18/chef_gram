@@ -100,6 +100,7 @@ class _BeatSelectorState extends State<BeatSelector> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: 2.h),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -136,78 +137,111 @@ class _BeatSelectorState extends State<BeatSelector> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(
-                            height: 4.h,
+                            height: 6.h,
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: 2.w),
-                            child: DropdownButton<String>(
-                              value: state,
-                              icon: Icon(Icons.keyboard_arrow_down),
-                              iconSize: 28,
-                              elevation: 20,
-                              onChanged: (String? newval) {
-                                setState(() {
-                                  state = newval;
-                                  city = null;
-                                  beat = null;
-                                });
-                                getCities();
-                              },
-                              items: stateMap.keys
-                                  .toList()
-                                  .map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
+                            padding: EdgeInsets.symmetric(horizontal: 4.w),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Select State:",
+                                  style: TextStyle(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                DropdownButton<String>(
+                                  value: state,
+                                  icon: Icon(Icons.keyboard_arrow_down),
+                                  iconSize: 28,
+                                  elevation: 20,
+                                  onChanged: (String? newval) {
+                                    setState(() {
+                                      state = newval;
+                                      city = null;
+                                      beat = null;
+                                    });
+                                    getCities();
+                                  },
+                                  items: stateMap.keys
+                                      .toList()
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: 2.w),
-                            child: DropdownButton<String>(
-                              value: city,
-                              icon: Icon(Icons.keyboard_arrow_down),
-                              iconSize: 28,
-                              elevation: 20,
-                              onChanged: (String? newval) {
-                                setState(() {
-                                  city = newval;
-                                  beat = null;
-                                });
-                                getBeat();
-                              },
-                              items: cityMap.keys
-                                  .toList()
-                                  .map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
+                            padding: EdgeInsets.symmetric(horizontal: 4.w),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Select City:",
+                                  style: TextStyle(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                DropdownButton<String>(
+                                  value: city,
+                                  icon: Icon(Icons.keyboard_arrow_down),
+                                  iconSize: 28,
+                                  elevation: 20,
+                                  onChanged: (String? newval) {
+                                    setState(() {
+                                      city = newval;
+                                      beat = null;
+                                    });
+                                    getBeat();
+                                  },
+                                  items: cityMap.keys
+                                      .toList()
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: 2.w),
-                            child: DropdownButton<String>(
-                              value: beat,
-                              icon: Icon(Icons.keyboard_arrow_down),
-                              iconSize: 28,
-                              elevation: 20,
-                              onChanged: (String? newval) {
-                                setState(() {
-                                  beat = newval;
-                                });
-                              },
-                              items: beats.map<DropdownMenuItem<String>>(
-                                  (String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
+                            padding: EdgeInsets.symmetric(horizontal: 4.w),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Select Beat:",
+                                  style: TextStyle(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                DropdownButton<String>(
+                                  value: beat,
+                                  icon: Icon(Icons.keyboard_arrow_down),
+                                  iconSize: 28,
+                                  elevation: 20,
+                                  onChanged: (String? newval) {
+                                    setState(() {
+                                      beat = newval;
+                                    });
+                                  },
+                                  items: beats.map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(
