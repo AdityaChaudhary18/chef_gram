@@ -105,10 +105,11 @@ class _DashboardState extends State<Dashboard> {
                             color: Colors.blue,
                             icon: Icons.add,
                             onTap: () {
+                              // print(snapshot.data[index]);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => TakeOrder()),
+                                    builder: (context) => TakeOrder(shopDetails: snapshot.data[index])),
                               );
                             },
                           ),

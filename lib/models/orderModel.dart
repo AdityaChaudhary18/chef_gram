@@ -5,7 +5,7 @@ CollectionReference users = FirebaseFirestore.instance.collection('users');
 FirebaseAuth auth = FirebaseAuth.instance;
 
 class Order {
-  Order();
+  Order({required this.orderTakenBy, required this.shopName, required this.customerName});
 
   List<OrderItem> order = [];
   DateTime timeStamp = DateTime.now();

@@ -1,20 +1,22 @@
 import 'package:chef_gram/models/orderModel.dart';
+import 'package:chef_gram/models/profile_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import 'Dashboard/place_order.dart';
 
 class TakeOrder extends StatefulWidget {
-  const TakeOrder({Key? key}) : super(key: key);
-
+  TakeOrder({Key? key, this.shopDetails}) : super(key: key);
+var shopDetails;
   @override
   _TakeOrderState createState() => _TakeOrderState();
 }
 
 class _TakeOrderState extends State<TakeOrder> {
-  Order order = new Order();
+  late Order order;
 
   Future<List> getCatalog() async {
     List catalog = [];
@@ -29,7 +31,15 @@ class _TakeOrderState extends State<TakeOrder> {
         "image": data["image"]
       });
     }
+    print(widget.shopDetails);
     return catalog;
+  }
+
+  @override
+  void initState() {
+    order =  new Order(customerName: widget.shopDetails['shopOwner'],
+        shopName: widget.shopDetails['shopName'], orderTakenBy: Provider.of<Profile>(context, listen: false).name);
+    super.initState();
   }
 
   @override
@@ -124,6 +134,7 @@ class _TakeOrderState extends State<TakeOrder> {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    order.viewOrder();
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
