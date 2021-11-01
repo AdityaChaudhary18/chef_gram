@@ -8,6 +8,7 @@ import 'package:sizer/sizer.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../authentication_service.dart';
 import '../../database_service.dart';
+import '../takeOrder.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -103,7 +104,13 @@ class _DashboardState extends State<Dashboard> {
                             caption: 'Take Order',
                             color: Colors.blue,
                             icon: Icons.add,
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TakeOrder()),
+                              );
+                            },
                           ),
                           IconSlideAction(
                             caption: 'Get Details',
