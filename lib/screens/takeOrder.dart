@@ -1,3 +1,4 @@
+import 'package:chef_gram/database_service.dart';
 import 'package:chef_gram/models/orderModel.dart';
 import 'package:chef_gram/models/profile_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,23 +19,6 @@ var shopDetails;
 class _TakeOrderState extends State<TakeOrder> {
   late Order order;
 
-  Future<List> getCatalog() async {
-    List catalog = [];
-    var collection = FirebaseFirestore.instance.collection('catalog');
-    var querySnapshot = await collection.get();
-    for (var queryDocumentSnapshot in querySnapshot.docs) {
-      Map<String, dynamic> data = queryDocumentSnapshot.data();
-      catalog.add({
-        "name": data["name"],
-        "price": data["price"],
-        "quantity": data["quantity"],
-        "image": data["image"]
-      });
-    }
-    print(widget.shopDetails);
-    return catalog;
-  }
-
   @override
   void initState() {
     order =  new Order(customerName: widget.shopDetails['shopOwner'],
@@ -47,10 +31,25 @@ class _TakeOrderState extends State<TakeOrder> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Order From Catalog"),
+        actions: [
+          ElevatedButton(
+            style: ButtonStyle(elevation: MaterialStateProperty.all(0.0)),
+            child: Icon(Icons.refresh),
+            onPressed: () {
+              Provider.of<DatabaseService>(context, listen: false).catalog.clear();
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          TakeOrder(shopDetails: widget.shopDetails)
+                  )
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: FutureBuilder(
-          future: getCatalog(),
+          future: Provider.of<DatabaseService>(context).getCatalog(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
               return Center(

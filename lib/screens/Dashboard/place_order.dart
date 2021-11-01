@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../constants.dart';
+import 'dashboard.dart';
 
 class PlaceOrder extends StatefulWidget {
   final Order order;
@@ -17,6 +18,7 @@ class PlaceOrder extends StatefulWidget {
 class _PlaceOrderState extends State<PlaceOrder> {
   // final customerNameController = TextEditingController();
   final addressController = TextEditingController();
+
   // final shopNameController = TextEditingController();
   CollectionReference orders = FirebaseFirestore.instance.collection('orders');
   var user =
@@ -73,8 +75,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
               children: [
                 Text(
                   "Order Summary",
-                  style: TextStyle(
-                      fontSize: 20.sp, fontWeight: FontWeight.bold),
+                  style:
+                      TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   "Employee name: ${widget.order.orderTakenBy}",
@@ -157,7 +159,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         widget.order.order[index].name,
@@ -209,8 +211,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               primary: Colors.red,
                             ),
                             onPressed: () {
-                              // Navigator.pushReplacementNamed(
-                              //     context, '/dashboard');
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Dashboard()));
                             },
                             child: Icon(Icons.clear),
                           ),
@@ -222,7 +226,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               primary: Colors.green,
                             ),
                             // onPressed: placeOrder,
-                            onPressed: (){},
+                            onPressed: () {},
                             child: Icon(Icons.check),
                           ),
                         ],
