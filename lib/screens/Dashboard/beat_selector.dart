@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../authentication_service.dart';
 import '../../database_service.dart';
 
 class BeatSelector extends StatefulWidget {
@@ -70,102 +71,169 @@ class _BeatSelectorState extends State<BeatSelector> {
     super.initState();
   }
 
+  var now = new DateTime.now();
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Consumer<Profile>(builder: (context, profile, child) {
-          if (profile.state != '' &&
-              profile.city != '' &&
-              profile.beat != '' &&
-              profile.timeTargetUpdated?.toDate().day == DateTime.now().day) {
-            return Dashboard();
-          } else
-            return Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 2.w),
-                  child: DropdownButton<String>(
-                    value: state,
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    iconSize: 28,
-                    elevation: 20,
-                    onChanged: (String? newval) {
-                      setState(() {
-                        state = newval;
-                        city = null;
-                        beat = null;
-                      });
-                      getCities();
-                    },
-                    items: stateMap.keys
-                        .toList()
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
+    if (Provider.of<Profile>(context).state != '' &&
+        Provider.of<Profile>(context).city != '' &&
+        Provider.of<Profile>(context).beat != '' &&
+        Provider.of<Profile>(context).timeTargetUpdated?.toDate().day ==
+            DateTime.now().day) {
+      return Dashboard();
+    } else {
+      return SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("Daily Target Selector"),
+            centerTitle: true,
+          ),
+          body: Consumer<Profile>(builder: (context, profile, child) {
+            if (profile.state != '' &&
+                profile.city != '' &&
+                profile.beat != '' &&
+                profile.timeTargetUpdated?.toDate().day == DateTime.now().day) {
+              return Dashboard();
+            } else
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Logged in as,"),
+                            Text(
+                              profile.name,
+                              style: TextStyle(
+                                  fontSize: 14.sp, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              "Set Target for,",
+                              style: TextStyle(fontSize: 10.sp),
+                            ),
+                            Text(
+                              "${now.day}-${now.month}-${now.year}",
+                              style: TextStyle(
+                                  fontSize: 14.sp, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: 100.w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 4.h,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 2.w),
+                            child: DropdownButton<String>(
+                              value: state,
+                              icon: Icon(Icons.keyboard_arrow_down),
+                              iconSize: 28,
+                              elevation: 20,
+                              onChanged: (String? newval) {
+                                setState(() {
+                                  state = newval;
+                                  city = null;
+                                  beat = null;
+                                });
+                                getCities();
+                              },
+                              items: stateMap.keys
+                                  .toList()
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 2.w),
+                            child: DropdownButton<String>(
+                              value: city,
+                              icon: Icon(Icons.keyboard_arrow_down),
+                              iconSize: 28,
+                              elevation: 20,
+                              onChanged: (String? newval) {
+                                setState(() {
+                                  city = newval;
+                                  beat = null;
+                                });
+                                getBeat();
+                              },
+                              items: cityMap.keys
+                                  .toList()
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 2.w),
+                            child: DropdownButton<String>(
+                              value: beat,
+                              icon: Icon(Icons.keyboard_arrow_down),
+                              iconSize: 28,
+                              elevation: 20,
+                              onChanged: (String? newval) {
+                                setState(() {
+                                  beat = newval;
+                                });
+                              },
+                              items: beats.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 4.h,
+                          ),
+                          ElevatedButton(
+                            child: Text("Set Target"),
+                            onPressed: () {
+                              if (state != null &&
+                                  city != null &&
+                                  beat != null) {
+                                context
+                                    .read<DatabaseService>()
+                                    .updateTodayTarget(state, city, beat);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 2.w),
-                  child: DropdownButton<String>(
-                    value: city,
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    iconSize: 28,
-                    elevation: 20,
-                    onChanged: (String? newval) {
-                      setState(() {
-                        city = newval;
-                        beat = null;
-                      });
-                      getBeat();
-                    },
-                    items: cityMap.keys
-                        .toList()
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 2.w),
-                  child: DropdownButton<String>(
-                    value: beat,
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    iconSize: 28,
-                    elevation: 20,
-                    onChanged: (String? newval) {
-                      setState(() {
-                        beat = newval;
-                      });
-                    },
-                    items: beats.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                ElevatedButton(
-                  child: Text("Done"),
-                  onPressed: () {
-                    if (state != null && city != null && beat != null) {
-                      context
-                          .read<DatabaseService>()
-                          .updateTodayTarget(state, city, beat);
-                    }
-                  },
-                ),
-              ],
-            );
-        }),
-      ),
-    );
+              );
+          }),
+        ),
+      );
+    }
   }
 }
