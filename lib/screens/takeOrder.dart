@@ -11,7 +11,7 @@ import 'Dashboard/place_order.dart';
 
 class TakeOrder extends StatefulWidget {
   TakeOrder({Key? key, this.shopDetails}) : super(key: key);
-var shopDetails;
+  var shopDetails;
   @override
   _TakeOrderState createState() => _TakeOrderState();
 }
@@ -21,8 +21,12 @@ class _TakeOrderState extends State<TakeOrder> {
 
   @override
   void initState() {
-    order =  new Order(customerName: widget.shopDetails['shopOwner'],
-        shopName: widget.shopDetails['shopName'], orderTakenBy: Provider.of<Profile>(context, listen: false).name);
+    order = new Order(
+      customerName: widget.shopDetails['shopOwner'],
+      shopName: widget.shopDetails['shopName'],
+      orderTakenBy: Provider.of<Profile>(context, listen: false).name,
+      shopRef: widget.shopDetails["shopRef"].toString(),
+    );
     super.initState();
   }
 
@@ -36,13 +40,14 @@ class _TakeOrderState extends State<TakeOrder> {
             style: ButtonStyle(elevation: MaterialStateProperty.all(0.0)),
             child: Icon(Icons.refresh),
             onPressed: () {
-              Provider.of<DatabaseService>(context, listen: false).catalog.clear();
-              Navigator.pushReplacement(context,
+              Provider.of<DatabaseService>(context, listen: false)
+                  .catalog
+                  .clear();
+              Navigator.pushReplacement(
+                  context,
                   MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          TakeOrder(shopDetails: widget.shopDetails)
-                  )
-              );
+                          TakeOrder(shopDetails: widget.shopDetails)));
             },
           ),
         ],

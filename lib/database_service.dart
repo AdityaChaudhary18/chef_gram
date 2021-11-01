@@ -42,7 +42,9 @@ class DatabaseService {
     for (var shop in shops) {
       Map<String, dynamic> shopData = new Map();
       shopData['isVisited'] = false;
+      shopData['orderSuccessful'] = false;
       shopData['shopRef'] = shop;
+      shopData['comment'] = '';
       shopsToVisit.add(shopData);
     }
     _profileCollection.doc(uid).update({

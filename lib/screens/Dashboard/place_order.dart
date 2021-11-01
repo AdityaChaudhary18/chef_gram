@@ -1,9 +1,11 @@
 import 'package:chef_gram/models/orderModel.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../constants.dart';
+import '../../database_service.dart';
 import 'dashboard.dart';
 
 class PlaceOrder extends StatefulWidget {
@@ -17,8 +19,26 @@ class PlaceOrder extends StatefulWidget {
 
 class _PlaceOrderState extends State<PlaceOrder> {
   CollectionReference orders = FirebaseFirestore.instance.collection('orders');
-  var user =
-      FirebaseFirestore.instance.collection('users').doc(auth.currentUser!.uid);
+
+  Future<void> orderIsConfirmed() async {
+    var doc = await FirebaseFirestore.instance
+        .doc(
+            'users/${Provider.of<DatabaseService>(context, listen: false).uid}')
+        .get();
+    List visits = doc.get('targetData.shopsToVisit');
+    for (int i = 0; i < visits.length; i++) {
+      if (visits[i]['shopRef'].toString() == widget.order.shopRef) {
+        visits[i]["isVisited"] = true;
+        visits[i]["orderSuccessful"] = true;
+        visits[i]["comment"] = "Order Placed successfully";
+        break;
+      }
+    }
+    FirebaseFirestore.instance
+        .doc(
+            'users/${Provider.of<DatabaseService>(context, listen: false).uid}')
+        .update({"targetData.shopsToVisit": visits});
+  }
 
   Future<void> placeOrder() async {
     List<Map<String, dynamic>> items = [];
@@ -26,13 +46,14 @@ class _PlaceOrderState extends State<PlaceOrder> {
       items.add(element.toMap());
     });
     var orderData = {
+      "isConfirmed": false,
       'dateTime': widget.order.timeStamp.toLocal(),
       'customerName': widget.order.customerName,
       'address': "unknown",
       'shopName': widget.order.shopName,
       'orderTakenBy': widget.order.orderTakenBy,
       'total': widget.order.total,
-      'items': items
+      'items': items,
     };
     return orders.add(orderData).then((value) async {
       // await OrderSpreadSheet.init(orderData);
@@ -45,7 +66,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
         ),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      Navigator.pushReplacementNamed(context, '/dashboard');
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Dashboard()));
     }).catchError((error) {
       final snackBar = SnackBar(
         backgroundColor: Colors.lightBlue,
@@ -210,7 +232,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               primary: Colors.red,
                             ),
                             onPressed: () {
-                              Navigator.pushReplacement(
+                              Navigator.pop(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => Dashboard()));
@@ -224,8 +246,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
                             style: ElevatedButton.styleFrom(
                               primary: Colors.green,
                             ),
-                            // onPressed: placeOrder,
-                            onPressed: () {},
+                            onPressed: () {
+                              placeOrder();
+                              orderIsConfirmed();
+                            },
                             child: Icon(Icons.check),
                           ),
                         ],

@@ -5,7 +5,11 @@ CollectionReference users = FirebaseFirestore.instance.collection('users');
 FirebaseAuth auth = FirebaseAuth.instance;
 
 class Order {
-  Order({required this.orderTakenBy, required this.shopName, required this.customerName});
+  Order(
+      {required this.orderTakenBy,
+      required this.shopName,
+      required this.customerName,
+      required this.shopRef});
 
   List<OrderItem> order = [];
   DateTime timeStamp = DateTime.now();
@@ -14,7 +18,7 @@ class Order {
   String customerName = "Customer";
   String shopName = 'unknown';
   String address = 'unknown';
-
+  String shopRef = 'unknown';
   Function? addToOrder(OrderItem item) {
     this.order.add(item);
   }

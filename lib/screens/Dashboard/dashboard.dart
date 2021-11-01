@@ -8,6 +8,7 @@ import 'package:sizer/sizer.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../authentication_service.dart';
 import '../../database_service.dart';
+import '../excuse-page.dart';
 import '../takeOrder.dart';
 
 class Dashboard extends StatefulWidget {
@@ -27,7 +28,8 @@ class _DashboardState extends State<Dashboard> {
             (value) => shopDetails.add({
               "shopName": value["shopName"],
               "shopOwner": value["shopOwner"],
-              'isVisited': shop['isVisited']
+              'isVisited': shop['isVisited'],
+              'shopRef': shop['shopRef']
             }),
           );
     }
@@ -109,7 +111,8 @@ class _DashboardState extends State<Dashboard> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => TakeOrder(shopDetails: snapshot.data[index])),
+                                    builder: (context) => TakeOrder(
+                                        shopDetails: snapshot.data[index])),
                               );
                             },
                           ),
@@ -123,7 +126,28 @@ class _DashboardState extends State<Dashboard> {
                             caption: 'Mark Entry',
                             color: Colors.green,
                             icon: Icons.check,
-                            onTap: () {},
+                            onTap: () {
+                              if (snapshot.data[index]["isVisited"]) {
+                                final snackBar = SnackBar(
+                                  backgroundColor: Colors.lightBlue,
+                                  duration: Duration(seconds: 2),
+                                  content: Text(
+                                    "Attendance Marked Successfully",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ExcusePage(
+                                            shopRef: snapshot.data[index]
+                                                    ['shopRef']
+                                                .toString())));
+                              }
+                            },
                           ),
                         ],
                       ),
