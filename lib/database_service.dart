@@ -25,7 +25,7 @@ class DatabaseService {
   }
 
   Profile _profileFromSnapshot(DocumentSnapshot snapshot) {
-    shopsToVisit = snapshot.get('shopsToVisit');
+    shopsToVisit = snapshot.get('shopsToVisit') ?? [];
     return Profile(
       name: snapshot.get('name') ?? '',
       age: snapshot.get('age') ?? '',
@@ -34,7 +34,7 @@ class DatabaseService {
       beat: snapshot.get('beat') ?? '',
       timeTargetUpdated: snapshot.get('timeTargetUpdated') ??
           DateTime.now().subtract(Duration(days: 1)),
-      shopsToVisit: snapshot.get('shopsToVisit') ?? [],
+      shopsToVisit: shopsToVisit,
     );
   }
 
@@ -55,17 +55,5 @@ class DatabaseService {
       'timeTargetUpdated': DateTime.now(),
       'shopsToVisit': shopsToVisit,
     });
-
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute<void>(
-    //     builder: (context) => Dashboard(),
-    //   ),
-    // );
   }
-
-  // Future<List> getShopsToVisit() async{
-  //   var document = await _profileCollection.doc(uid).get();
-  //   return document.get('shopsToVisit');;
-  // }
 }

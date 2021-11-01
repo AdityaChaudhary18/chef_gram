@@ -88,184 +88,171 @@ class _BeatSelectorState extends State<BeatSelector> {
             title: Text("Daily Target Selector"),
             centerTitle: true,
           ),
-          body: Consumer<Profile>(builder: (context, profile, child) {
-            if (profile.state != '' &&
-                profile.city != '' &&
-                profile.beat != '' &&
-                profile.timeTargetUpdated?.toDate().day == DateTime.now().day) {
-              return Dashboard();
-            } else
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
-                child: Column(
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 2.h),
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(height: 2.h),
-                    Row(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Logged in as,"),
-                            Text(
-                              profile.name,
-                              style: TextStyle(
-                                  fontSize: 14.sp, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "Set Target for,",
-                              style: TextStyle(fontSize: 10.sp),
-                            ),
-                            Text(
-                              "${now.day}-${now.month}-${now.year}",
-                              style: TextStyle(
-                                  fontSize: 14.sp, fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                        Text("Logged in as,"),
+                        Text(
+                          Provider.of<Profile>(context).name,
+                          style: TextStyle(
+                              fontSize: 14.sp, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
-                    Container(
-                      width: 100.w,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 6.h,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 4.w),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Select State:",
-                                  style: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                DropdownButton<String>(
-                                  value: state,
-                                  icon: Icon(Icons.keyboard_arrow_down),
-                                  iconSize: 28,
-                                  elevation: 20,
-                                  onChanged: (String? newval) {
-                                    setState(() {
-                                      state = newval;
-                                      city = null;
-                                      beat = null;
-                                    });
-                                    getCities();
-                                  },
-                                  items: stateMap.keys
-                                      .toList()
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 4.w),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Select City:",
-                                  style: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                DropdownButton<String>(
-                                  value: city,
-                                  icon: Icon(Icons.keyboard_arrow_down),
-                                  iconSize: 28,
-                                  elevation: 20,
-                                  onChanged: (String? newval) {
-                                    setState(() {
-                                      city = newval;
-                                      beat = null;
-                                    });
-                                    getBeat();
-                                  },
-                                  items: cityMap.keys
-                                      .toList()
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 4.w),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Select Beat:",
-                                  style: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                DropdownButton<String>(
-                                  value: beat,
-                                  icon: Icon(Icons.keyboard_arrow_down),
-                                  iconSize: 28,
-                                  elevation: 20,
-                                  onChanged: (String? newval) {
-                                    setState(() {
-                                      beat = newval;
-                                    });
-                                  },
-                                  items: beats.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 4.h,
-                          ),
-                          ElevatedButton(
-                            child: Text("Set Target"),
-                            onPressed: () {
-                              if (state != null &&
-                                  city != null &&
-                                  beat != null) {
-                                context
-                                    .read<DatabaseService>()
-                                    .updateTodayTarget(state, city, beat);
-                              }
-                            },
-                          ),
-                        ],
-                      ),
+                    Column(
+                      children: [
+                        Text(
+                          "Set Target for,",
+                          style: TextStyle(fontSize: 10.sp),
+                        ),
+                        Text(
+                          "${now.day}-${now.month}-${now.year}",
+                          style: TextStyle(
+                              fontSize: 14.sp, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              );
-          }),
+                Container(
+                  width: 100.w,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 6.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Select State:",
+                              style: TextStyle(
+                                  fontSize: 12.sp, fontWeight: FontWeight.bold),
+                            ),
+                            DropdownButton<String>(
+                              value: state,
+                              icon: Icon(Icons.keyboard_arrow_down),
+                              iconSize: 28,
+                              elevation: 20,
+                              onChanged: (String? newval) {
+                                setState(() {
+                                  state = newval;
+                                  city = null;
+                                  beat = null;
+                                });
+                                getCities();
+                              },
+                              items: stateMap.keys
+                                  .toList()
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Select City:",
+                              style: TextStyle(
+                                  fontSize: 12.sp, fontWeight: FontWeight.bold),
+                            ),
+                            DropdownButton<String>(
+                              value: city,
+                              icon: Icon(Icons.keyboard_arrow_down),
+                              iconSize: 28,
+                              elevation: 20,
+                              onChanged: (String? newval) {
+                                setState(() {
+                                  city = newval;
+                                  beat = null;
+                                });
+                                getBeat();
+                              },
+                              items: cityMap.keys
+                                  .toList()
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Select Beat:",
+                              style: TextStyle(
+                                  fontSize: 12.sp, fontWeight: FontWeight.bold),
+                            ),
+                            DropdownButton<String>(
+                              value: beat,
+                              icon: Icon(Icons.keyboard_arrow_down),
+                              iconSize: 28,
+                              elevation: 20,
+                              onChanged: (String? newval) {
+                                setState(() {
+                                  beat = newval;
+                                });
+                              },
+                              items: beats.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 4.h,
+                      ),
+                      ElevatedButton(
+                        child: Text("Set Target"),
+                        onPressed: () {
+                          if (state != null && city != null && beat != null) {
+                            context
+                                .read<DatabaseService>()
+                                .updateTodayTarget(state, city, beat);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       );
     }
