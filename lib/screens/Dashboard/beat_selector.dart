@@ -75,9 +75,7 @@ class _BeatSelectorState extends State<BeatSelector> {
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<Profile>(context).state != '' &&
-        Provider.of<Profile>(context).city != '' &&
-        Provider.of<Profile>(context).beat != '' &&
+    if (
         Provider.of<Profile>(context).timeTargetUpdated?.toDate().day ==
             DateTime.now().day) {
       return Dashboard();

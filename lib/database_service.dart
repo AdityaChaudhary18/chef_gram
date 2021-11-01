@@ -25,16 +25,13 @@ class DatabaseService {
   }
 
   Profile _profileFromSnapshot(DocumentSnapshot snapshot) {
-    shopsToVisit = snapshot.get('shopsToVisit') ?? [];
+    shopsToVisit = snapshot.get('targetData.shopsToVisit') ?? [];
     return Profile(
       name: snapshot.get('name') ?? '',
       age: snapshot.get('age') ?? '',
-      state: snapshot.get('state') ?? '',
-      city: snapshot.get('city') ?? '',
-      beat: snapshot.get('beat') ?? '',
+      targetData: snapshot.get('targetData') ?? {},
       timeTargetUpdated: snapshot.get('timeTargetUpdated') ??
           DateTime.now().subtract(Duration(days: 1)),
-      shopsToVisit: shopsToVisit,
     );
   }
 
@@ -49,11 +46,13 @@ class DatabaseService {
       shopsToVisit.add(shopData);
     }
     _profileCollection.doc(uid).update({
-      'state': state,
-      'city': city,
-      'beat': beat,
+      'targetData': {
+        'state': state,
+        'city': city,
+        'beat': beat,
+        'shopsToVisit': shopsToVisit,
+      },
       'timeTargetUpdated': DateTime.now(),
-      'shopsToVisit': shopsToVisit,
     });
   }
 
