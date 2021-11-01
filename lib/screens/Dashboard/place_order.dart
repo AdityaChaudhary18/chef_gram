@@ -16,8 +16,6 @@ class PlaceOrder extends StatefulWidget {
 }
 
 class _PlaceOrderState extends State<PlaceOrder> {
-  final addressController = TextEditingController();
-
   CollectionReference orders = FirebaseFirestore.instance.collection('orders');
   var user =
       FirebaseFirestore.instance.collection('users').doc(auth.currentUser!.uid);
@@ -30,7 +28,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
     var orderData = {
       'dateTime': widget.order.timeStamp.toLocal(),
       'customerName': widget.order.customerName,
-      'address': addressController.value.text,
+      'address': "unknown",
       'shopName': widget.order.shopName,
       'orderTakenBy': widget.order.orderTakenBy,
       'total': widget.order.total,
