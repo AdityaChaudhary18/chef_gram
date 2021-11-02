@@ -6,6 +6,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../constants.dart';
 import '../../database_service.dart';
+import 'beat_selector.dart';
 import 'dashboard.dart';
 
 class PlaceOrder extends StatefulWidget {
@@ -66,8 +67,11 @@ class _PlaceOrderState extends State<PlaceOrder> {
         ),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Dashboard()));
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => BeatSelector(),
+          ),
+          (route) => false);
     }).catchError((error) {
       final snackBar = SnackBar(
         backgroundColor: Colors.lightBlue,
