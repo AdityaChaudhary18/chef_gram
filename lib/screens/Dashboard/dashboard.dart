@@ -9,6 +9,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../authentication_service.dart';
 import '../../database_service.dart';
 import '../excuse-page.dart';
+import '../profile.dart';
 import '../takeOrder.dart';
 
 class Dashboard extends StatefulWidget {
@@ -45,6 +46,17 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: ElevatedButton(
+          style: ButtonStyle(elevation: MaterialStateProperty.all(0.0)),
+          child: Icon(Icons.account_circle),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(),
+                ));
+          },
+        ),
         centerTitle: true,
         elevation: 10,
         title: Text("Dashboard"),
