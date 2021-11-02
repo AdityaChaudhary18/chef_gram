@@ -25,7 +25,7 @@ class _DashboardState extends State<Dashboard> {
     shopDetails.clear();
     for (var shop
         in Provider.of<DatabaseService>(context, listen: true).shopsToVisit) {
-      await FirebaseFirestore.instance.doc(shop["shopRef"].path).get().then(
+      await FirebaseFirestore.instance.doc(shop["shopRef"]).get().then(
             (value) => shopDetails.add({
               "shopName": value["shopName"],
               "shopOwner": value["shopOwner"],

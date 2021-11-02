@@ -37,13 +37,13 @@ class DatabaseService {
 
   void updateTodayTarget(String state, String city, String beat) async {
     shopsToVisit.clear();
-    var beatDoc = await _beatCollection.doc(beat.replaceAll(' ', '')).get();
-    List shops = beatDoc.get('shops');
+    var beatDoc = await FirebaseFirestore.instance.collection('shops').where('beat', isEqualTo: beat).get();
+    List shops = beatDoc.docs;
     for (var shop in shops) {
       Map<String, dynamic> shopData = new Map();
       shopData['isVisited'] = false;
       shopData['orderSuccessful'] = false;
-      shopData['shopRef'] = shop;
+      shopData['shopRef'] = 'shops/${shop.id}';
       shopData['comment'] = '';
       shopsToVisit.add(shopData);
     }
