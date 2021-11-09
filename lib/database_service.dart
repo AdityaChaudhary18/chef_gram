@@ -35,15 +35,31 @@ class DatabaseService {
     );
   }
 
+  List<Map<String, dynamic>> _shopsInfo = [];
+
+  Future<List> getShopInfo(String beat) async {
+    if (_shopsInfo.isEmpty) {
+      var beatDoc = await FirebaseFirestore.instance
+          .collection('shops')
+          .where('beat', isEqualTo: beat)
+          .get();
+      List shops = beatDoc.docs;
+      for (var shop in shops) {
+        _shopsInfo.add({...shop.data(), 'shopRef': 'shops/${shop.id}'});
+      }
+    }
+    return _shopsInfo;
+  }
+
   void updateTodayTarget(String state, String city, String beat) async {
     shopsToVisit.clear();
-    var beatDoc = await FirebaseFirestore.instance.collection('shops').where('beat', isEqualTo: beat).get();
-    List shops = beatDoc.docs;
-    for (var shop in shops) {
+    _shopsInfo.clear();
+    List shopInfo = await getShopInfo(beat);
+    for (var shop in shopInfo) {
       Map<String, dynamic> shopData = new Map();
       shopData['isVisited'] = false;
       shopData['orderSuccessful'] = false;
-      shopData['shopRef'] = 'shops/${shop.id}';
+      shopData['shopRef'] = shop['shopRef'];
       shopData['comment'] = '';
       shopsToVisit.add(shopData);
     }
