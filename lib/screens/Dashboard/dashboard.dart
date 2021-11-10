@@ -19,25 +19,25 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  Future<List> getShopInfo () async{
+    return await Provider.of<DatabaseService>(context, listen: false)
+        .getShopInfo(Provider.of<Profile>(context, listen: false).targetData!['beat']);
+  }
   Future<List> getShops() async {
-    List shopInfo = await Provider.of<DatabaseService>(context, listen: false)
-        .getShopInfo(Provider.of<Profile>(context, listen: false).targetData!['beat']).then((shopInfo) {
-      List shopDetails = [];
-      print('value = ${shopInfo.toSet().toList().length}');
-      for (int i=0; i<Provider.of<DatabaseService>(context, listen: false).shopsToVisit.length; i++) {
-        var shop = Provider.of<DatabaseService>(context, listen: false).shopsToVisit[i];
-        shopDetails.add({
-          "shopName": shopInfo[i]["shopName"],
-          "shopOwner": shopInfo[i]["shopOwner"],
-          'isVisited': shop['isVisited'],
-          'shopRef': shop['shopRef'],
-          'address': shopInfo[i]["address"],
-          'phoneNo': shopInfo[i]["phoneNo"]
-        });
-      }
-      return shopDetails;
-    });
-    return shopInfo;
+    List shopInfo = await getShopInfo();
+    List shopDetails = [];
+    for (int i=0; i<shopInfo.length; i++) {
+      var shop = Provider.of<DatabaseService>(context, listen: false).shopsToVisit[i];
+      shopDetails.add({
+        "shopName": shopInfo[i]["shopName"],
+        "shopOwner": shopInfo[i]["shopOwner"],
+        'isVisited': shop['isVisited'],
+        'shopRef': shop['shopRef'],
+        'address': shopInfo[i]["address"],
+        'phoneNo': shopInfo[i]["phoneNo"]
+      });
+    }
+    return shopDetails;
   }
 
   @override
@@ -81,13 +81,11 @@ class _DashboardState extends State<Dashboard> {
           future: getShops(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
-              print("Hi");
               return Center(
                 child: CircularProgressIndicator(),
               );
             }
             else {
-              print("nO HI");
               return ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data.length,

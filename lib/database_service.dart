@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'models/profile_model.dart';
@@ -35,7 +37,7 @@ class DatabaseService {
     );
   }
 
-  List<Map<String, dynamic>> _shopsInfo = [];
+  List _shopsInfo = [];
 
   Future<List> getShopInfo(String beat) async {
     if (_shopsInfo.isEmpty) {
@@ -48,6 +50,10 @@ class DatabaseService {
         _shopsInfo.add({...shop.data(), 'shopRef': 'shops/${shop.id}'});
       }
     }
+    final jsonList = _shopsInfo.map((item) => jsonEncode(item)).toList();
+    final uniqueJsonList = jsonList.toSet().toList();
+    _shopsInfo = uniqueJsonList.map((item) => jsonDecode(item)).toList();
+    print('Inside: ${_shopsInfo}');
     return _shopsInfo;
   }
 
