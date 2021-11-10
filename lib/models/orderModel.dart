@@ -9,7 +9,8 @@ class Order {
       {required this.orderTakenBy,
       required this.shopName,
       required this.customerName,
-      required this.shopRef});
+      required this.shopRef,
+      required this.address});
 
   List<OrderItem> order = [];
   DateTime timeStamp = DateTime.now();

@@ -57,7 +57,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
       'items': items,
     };
     return orders.add(orderData).then((value) async {
-      // await OrderSpreadSheet.init(orderData);
       final snackBar = SnackBar(
         backgroundColor: Colors.lightBlue,
         duration: Duration(seconds: 8),

@@ -21,11 +21,13 @@ class _TakeOrderState extends State<TakeOrder> {
 
   @override
   void initState() {
+    print(widget.shopDetails);
     order = new Order(
       customerName: widget.shopDetails['shopOwner'],
       shopName: widget.shopDetails['shopName'],
       orderTakenBy: Provider.of<Profile>(context, listen: false).name,
       shopRef: widget.shopDetails["shopRef"].toString(),
+      address: widget.shopDetails['address']
     );
     super.initState();
   }
