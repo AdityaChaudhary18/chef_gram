@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-
-import '../../authentication_service.dart';
 import '../../database_service.dart';
 
 class BeatSelector extends StatefulWidget {
@@ -76,7 +74,15 @@ class _BeatSelectorState extends State<BeatSelector> {
             .timeTargetUpdated
             ?.toDate()
             .day ==
-        DateTime.now().day) {
+        DateTime.now().day && Provider.of<Profile>(context, listen: true)
+        .timeTargetUpdated
+        ?.toDate()
+        .month ==
+        DateTime.now().month && Provider.of<Profile>(context, listen: true)
+        .timeTargetUpdated
+        ?.toDate()
+        .year ==
+        DateTime.now().year) {
       return Dashboard();
     } else
     return SafeArea(
