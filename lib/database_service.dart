@@ -53,7 +53,6 @@ class DatabaseService {
     final jsonList = _shopsInfo.map((item) => jsonEncode(item)).toList();
     final uniqueJsonList = jsonList.toSet().toList();
     _shopsInfo = uniqueJsonList.map((item) => jsonDecode(item)).toList();
-    print('Inside: ${_shopsInfo}');
     return _shopsInfo;
   }
 

@@ -7,6 +7,7 @@ import 'package:sizer/sizer.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../authentication_service.dart';
 import '../../database_service.dart';
+import '../add_shop.dart';
 import '../excuse-page.dart';
 import '../profile.dart';
 import '../takeOrder.dart';
@@ -19,15 +20,19 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  Future<List> getShopInfo () async{
+  bool isExtended = false;
+  Future<List> getShopInfo() async {
     return await Provider.of<DatabaseService>(context, listen: false)
-        .getShopInfo(Provider.of<Profile>(context, listen: false).targetData!['beat']);
+        .getShopInfo(
+            Provider.of<Profile>(context, listen: false).targetData!['beat']);
   }
+
   Future<List> getShops() async {
     List shopInfo = await getShopInfo();
     List shopDetails = [];
-    for (int i=0; i<shopInfo.length; i++) {
-      var shop = Provider.of<DatabaseService>(context, listen: false).shopsToVisit[i];
+    for (int i = 0; i < shopInfo.length; i++) {
+      var shop =
+          Provider.of<DatabaseService>(context, listen: false).shopsToVisit[i];
       shopDetails.add({
         "shopName": shopInfo[i]["shopName"],
         "shopOwner": shopInfo[i]["shopOwner"],
@@ -76,16 +81,33 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddShop()),
+          );
+        },
+        label: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 4.0),
+              child: Icon(Icons.add),
+            ),
+            Text("Add Shop")
+          ],
+        ),
+      ),
       body: Container(
         child: FutureBuilder(
           future: getShops(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
+            if (!snapshot.hasData ||
+                snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            }
-            else {
+            } else {
               return ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data.length,
