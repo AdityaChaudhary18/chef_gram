@@ -34,13 +34,42 @@ class ProfilePage extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             }
-
-            var data = snapshot.data!.docs;
-            return ListView(
-              children: <Widget>[
-                ...snapshot.data!.docs.map((order) {
-                  return SingleOrderWidget(order: order);
-                })
+            return Column(
+              children: [
+                SizedBox(
+                  height: 2.h,
+                ),
+                Text(
+                  "Order History for ${now.day}-${now.month}-${now.year}",
+                  style:
+                      TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 2.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 2.w),
+                  child: Container(
+                    height: 50.h,
+                    width: 100.w,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black54,
+                        width: 3,
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5.0),
+                      ),
+                    ),
+                    child: ListView(
+                      children: <Widget>[
+                        ...snapshot.data!.docs.map((order) {
+                          return SingleOrderWidget(order: order);
+                        })
+                      ],
+                    ),
+                  ),
+                ),
               ],
             );
           },
