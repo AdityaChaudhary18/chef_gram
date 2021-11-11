@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../constants.dart';
-import '../database_service.dart';
 
 class AddShop extends StatefulWidget {
   const AddShop({Key? key}) : super(key: key);

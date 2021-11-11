@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../constants.dart';
 import '../../database_service.dart';
 import 'beat_selector.dart';
 import 'dashboard.dart';

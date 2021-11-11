@@ -1,6 +1,4 @@
-import 'package:chef_gram/models/profile_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class AuthenticationService with ChangeNotifier {

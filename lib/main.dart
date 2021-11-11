@@ -1,7 +1,6 @@
 import 'package:chef_gram/authentication_service.dart';
 import 'package:chef_gram/database_service.dart';
 import 'package:chef_gram/screens/Dashboard/beat_selector.dart';
-import 'package:chef_gram/screens/Dashboard/dashboard.dart';
 import 'package:chef_gram/screens/auth/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -39,7 +38,7 @@ class MyApp extends StatelessWidget {
         ),
         StreamProvider(
           create: (context) => context.read<DatabaseService>().profile,
-          initialData: Profile(name: '', age: 0),
+          initialData: Profile(name: '', age: 0, monthlyTarget: 60000),
         ),
       ],
       child: Sizer(builder: (context, orientation, deviceTye) {

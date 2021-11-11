@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:chef_gram/models/orderModel.dart';
 
 class OrderSummary extends StatelessWidget {
   final order;

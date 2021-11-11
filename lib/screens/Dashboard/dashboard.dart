@@ -1,6 +1,5 @@
 import 'package:chef_gram/models/profile_model.dart';
 import 'package:chef_gram/screens/auth/login.dart';
-import 'package:cloud_firestore_platform_interface/src/timestamp.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/src/provider.dart';

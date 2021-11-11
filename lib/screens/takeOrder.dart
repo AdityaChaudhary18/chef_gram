@@ -1,9 +1,7 @@
 import 'package:chef_gram/database_service.dart';
 import 'package:chef_gram/models/orderModel.dart';
 import 'package:chef_gram/models/profile_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 

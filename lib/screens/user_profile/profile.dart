@@ -1,5 +1,4 @@
 import 'package:chef_gram/database_service.dart';
-import 'package:chef_gram/models/orderModel.dart';
 import 'package:chef_gram/models/profile_model.dart';
 import 'package:chef_gram/screens/user_profile/order_summary.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
