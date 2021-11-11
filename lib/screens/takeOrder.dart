@@ -23,18 +23,18 @@ class _TakeOrderState extends State<TakeOrder> {
   void initState() {
     print(widget.shopDetails);
     order = new Order(
-      customerName: widget.shopDetails['shopOwner'],
-      shopName: widget.shopDetails['shopName'],
-      orderTakenBy: Provider.of<Profile>(context, listen: false).name,
-      shopRef: widget.shopDetails["shopRef"].toString(),
-      address: widget.shopDetails['address']
-    );
+        customerName: widget.shopDetails['shopOwner'],
+        shopName: widget.shopDetails['shopName'],
+        orderTakenBy: Provider.of<Profile>(context, listen: false).name,
+        shopRef: widget.shopDetails["shopRef"].toString(),
+        address: widget.shopDetails['address']);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.indigo.shade50,
       appBar: AppBar(
         title: Text("Order From Catalog"),
         actions: [
@@ -82,55 +82,80 @@ class _TakeOrderState extends State<TakeOrder> {
                               quantity: document['quantity'],
                             );
                             order.addToOrder(item);
-                            return Row(
-                              children: [
-                                Image.network(
-                                  document['image'],
-                                  height: 20.h,
-                                  width: 30.w,
-                                  fit: BoxFit.cover,
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 2.w, vertical: 1.h),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white70,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 1.h, horizontal: 1.w),
+                                  child: Row(
                                     children: [
-                                      Text(
-                                        document['name'],
-                                        style: TextStyle(
-                                            fontSize: 18.sp,
-                                            fontWeight: FontWeight.bold),
+                                      ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: Image.network(
+                                          document['image'],
+                                          height: 20.h,
+                                          width: 30.w,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 2.w),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                document['name'],
+                                                style: TextStyle(
+                                                    fontSize: 18.sp,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              SizedBox(
+                                                height: 2.h,
+                                              ),
+                                              Text(
+                                                "${document['quantity']} g",
+                                                style:
+                                                    TextStyle(fontSize: 16.sp),
+                                              ),
+                                              SizedBox(
+                                                height: 2.h,
+                                              ),
+                                              Text(
+                                                "₹ ${document['price']}",
+                                                style:
+                                                    TextStyle(fontSize: 16.sp),
+                                              )
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                       SizedBox(
-                                        height: 2.h,
+                                        height: 6.h,
+                                        width: 8.w,
+                                        child: TextFormField(
+                                          decoration:
+                                              InputDecoration(hintText: "0"),
+                                          keyboardType: TextInputType.number,
+                                          textAlign: TextAlign.center,
+                                          onChanged: (value) {
+                                            item.itemsOrdered =
+                                                int.parse(value);
+                                          },
+                                        ),
                                       ),
-                                      Text(
-                                        "${document['quantity']} g",
-                                        style: TextStyle(fontSize: 16.sp),
-                                      ),
-                                      SizedBox(
-                                        height: 2.h,
-                                      ),
-                                      Text(
-                                        "₹ ${document['price']}",
-                                        style: TextStyle(fontSize: 16.sp),
-                                      )
                                     ],
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 6.h,
-                                  width: 8.w,
-                                  child: TextFormField(
-                                    decoration: InputDecoration(hintText: "0"),
-                                    keyboardType: TextInputType.number,
-                                    textAlign: TextAlign.center,
-                                    onChanged: (value) {
-                                      item.itemsOrdered = int.parse(value);
-                                    },
-                                  ),
-                                ),
-                              ],
+                              ),
                             );
                           },
                         ),

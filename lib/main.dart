@@ -49,6 +49,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             fontFamily: 'WorkSans',
             brightness: Brightness.light,
+            primarySwatch: Colors.indigo,
           ),
           darkTheme: ThemeData(
             fontFamily: 'WorkSans',

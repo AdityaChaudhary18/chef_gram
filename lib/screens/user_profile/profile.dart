@@ -1,5 +1,6 @@
 import 'package:chef_gram/models/profile_model.dart';
 import 'package:chef_gram/screens/user_profile/order_summary.dart';
+import 'package:chef_gram/screens/user_profile/stats_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ class ProfilePage extends StatelessWidget {
     var lastMidnight = DateTime(now.year, now.month, now.day);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.indigo,
         title: Text("Profile"),
       ),
       body: Center(
@@ -100,7 +102,12 @@ class ProfilePage extends StatelessWidget {
                   Center(
                     child: ElevatedButton(
                       child: Text("See History For past 5 days"),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => StatsPage()),
+                        );
+                      },
                     ),
                   )
                 ],
