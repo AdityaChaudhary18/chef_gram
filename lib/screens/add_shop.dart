@@ -31,7 +31,7 @@ class _AddShopState extends State<AddShop> {
       "shopOwner": ownerNameController.value.text
     };
 
-    CollectionReference shops = FirebaseFirestore.instance.collection('shops');
+    CollectionReference shops = FirebaseFirestore.instance.collection('shopPermission');
     shops.add(data);
     Navigator.pop(context);
   }
