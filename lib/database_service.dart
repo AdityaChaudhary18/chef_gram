@@ -31,6 +31,7 @@ class DatabaseService {
     return Profile(
       name: snapshot.get('name') ?? '',
       age: snapshot.get('age') ?? '',
+      monthlyTarget: snapshot.get('monthlyTarget') ?? 0,
       targetData: snapshot.get('targetData') ?? {},
       timeTargetUpdated: snapshot.get('timeTargetUpdated') ??
           DateTime.now().subtract(Duration(days: 1)),
@@ -70,6 +71,7 @@ class DatabaseService {
     }
     _profileCollection.doc(uid).update({
       'targetData': {
+        'todayTarget': 10000,
         'state': state,
         'city': city,
         'beat': beat,
