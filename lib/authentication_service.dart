@@ -15,7 +15,6 @@ class AuthenticationService with ChangeNotifier {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: "$name@spice.com", password: password);
-      print(_firebaseAuth.currentUser!.uid);
       return "Signed In Successfully";
     } on FirebaseAuthException catch (e) {
       return e.message ?? "error";

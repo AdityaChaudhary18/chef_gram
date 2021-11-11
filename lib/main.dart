@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         ),
         StreamProvider(
           create: (context) => context.read<DatabaseService>().profile,
-          initialData: Profile(name: '', age: 0, monthlyTarget: 60000),
+          initialData: Profile(name: '', age: 0, monthlyTarget: 60000, role: 'employee'),
         ),
       ],
       child: Sizer(builder: (context, orientation, deviceTye) {

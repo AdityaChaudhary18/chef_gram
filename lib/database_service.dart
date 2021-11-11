@@ -33,6 +33,7 @@ class DatabaseService {
       age: snapshot.get('age') ?? '',
       monthlyTarget: snapshot.get('monthlyTarget') ?? 0,
       targetData: snapshot.get('targetData') ?? {},
+      role: snapshot.get('role'),
       timeTargetUpdated: snapshot.get('timeTargetUpdated') ??
           DateTime.now().subtract(Duration(days: 1)),
     );
