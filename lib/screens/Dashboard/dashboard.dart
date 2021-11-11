@@ -1,5 +1,6 @@
 import 'package:chef_gram/models/profile_model.dart';
 import 'package:chef_gram/screens/auth/login.dart';
+import 'package:cloud_firestore_platform_interface/src/timestamp.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/src/provider.dart';
@@ -69,15 +70,19 @@ class _DashboardState extends State<Dashboard> {
         elevation: 10,
         title: Text("Dashboard"),
         actions: [
-          ElevatedButton(
-            style: ButtonStyle(elevation: MaterialStateProperty.all(0.0)),
-            child: Icon(Icons.logout),
-            onPressed: () {
-              context.read<AuthenticationService>().signOut();
-              MaterialPageRoute<void>(
-                builder: (context) => LogInPage(),
-              );
-            },
+          PopupMenuButton<int>(
+            onSelected: (item) => onSelected(context, item),
+            itemBuilder: (context) => [
+              PopupMenuItem<int>(
+                value: 0,
+                child: Text("Reset Beat"),
+              ),
+              PopupMenuDivider(),
+              PopupMenuItem<int>(
+                value: 1,
+                child: Text("Log Out"),
+              )
+            ],
           ),
         ],
       ),
@@ -197,5 +202,19 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
     );
+  }
+}
+
+void onSelected(BuildContext context, int item) {
+  switch (item) {
+    case 0:
+      Provider.of<DatabaseService>(context, listen: false).resetBeatDate();
+      break;
+    case 1:
+      context.read<AuthenticationService>().signOut();
+      MaterialPageRoute<void>(
+        builder: (context) => LogInPage(),
+      );
+      break;
   }
 }

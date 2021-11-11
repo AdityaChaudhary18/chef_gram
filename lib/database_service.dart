@@ -98,4 +98,9 @@ class DatabaseService {
     } else
       return catalog;
   }
+
+  void resetBeatDate() {
+    FirebaseFirestore.instance.collection('users').doc(uid).update(
+        {"timeTargetUpdated": DateTime.now().subtract(Duration(days: 1))});
+  }
 }
