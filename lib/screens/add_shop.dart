@@ -28,7 +28,8 @@ class _AddShopState extends State<AddShop> {
       "beat": Provider.of<Profile>(context, listen: false).targetData!['beat'],
       "phoneNo": phoneNoController.value.text,
       "shopName": shopNameController.value.text,
-      "shopOwner": ownerNameController.value.text
+      "shopOwner": ownerNameController.value.text,
+      "employeeName": Provider.of<Profile>(context, listen: false).name
     };
 
     CollectionReference shops = FirebaseFirestore.instance.collection('shopPermission');
