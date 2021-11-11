@@ -40,7 +40,8 @@ dependencies:
   sizer: ^2.0.15
   cloud_firestore: ^2.5.4
   flutter_slidable: ^0.6.0
-
+  syncfusion_flutter_charts: ^19.3.46
+  intl: ^0.17.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
