@@ -52,6 +52,51 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    void _showDialog(
+        String shopName, String shopOwner, String address, String PhoneNo) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              shopName,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text("Owner Name: ",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(shopOwner),
+                  Text(""),
+                  Text("Shop Address: ",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    address,
+                  ),
+                  Text(""),
+                  Text("Phone Number: ",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  GestureDetector(
+                    child: Text(PhoneNo),
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text("Close"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.indigo.shade50,
       appBar: AppBar(
@@ -184,7 +229,14 @@ class _DashboardState extends State<Dashboard> {
                                 caption: 'Get Details',
                                 color: Colors.deepPurple,
                                 icon: Icons.info_outline,
-                                onTap: () {},
+                                onTap: () {
+                                  _showDialog(
+                                    snapshot.data[index]['shopName'],
+                                    snapshot.data[index]['shopOwner'],
+                                    snapshot.data[index]['address'],
+                                    snapshot.data[index]['phoneNo'],
+                                  );
+                                },
                               ),
                               IconSlideAction(
                                 caption: 'Mark Entry',
