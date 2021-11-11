@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:provider/src/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../authentication_service.dart';
 import '../../database_service.dart';
 import '../add_shop.dart';
@@ -39,7 +40,8 @@ class _DashboardState extends State<Dashboard> {
         'isVisited': shop['isVisited'],
         'shopRef': shop['shopRef'],
         'address': shopInfo[i]["address"],
-        'phoneNo': shopInfo[i]["phoneNo"]
+        'phoneNo': shopInfo[i]["phoneNo"],
+        "email": shopInfo[i]["email"],
       });
     }
     return shopDetails;
@@ -50,10 +52,18 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
   }
 
+  Future<void> _makePhoneCall(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    void _showDialog(
-        String shopName, String shopOwner, String address, String PhoneNo) {
+    void _showDialog(String shopName, String shopOwner, String address,
+        String PhoneNo, String email) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -69,6 +79,10 @@ class _DashboardState extends State<Dashboard> {
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   Text(shopOwner),
                   Text(""),
+                  Text("Email: ",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(email),
+                  Text(""),
                   Text("Shop Address: ",
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   Text(
@@ -78,8 +92,13 @@ class _DashboardState extends State<Dashboard> {
                   Text("Phone Number: ",
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   GestureDetector(
-                    child: Text(PhoneNo),
-                    onTap: () {},
+                    child: Text(
+                      PhoneNo,
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    onTap: () => setState(() {
+                      _makePhoneCall('tel:+91$PhoneNo');
+                    }),
                   ),
                 ],
               ),
@@ -235,6 +254,7 @@ class _DashboardState extends State<Dashboard> {
                                     snapshot.data[index]['shopOwner'],
                                     snapshot.data[index]['address'],
                                     snapshot.data[index]['phoneNo'],
+                                    snapshot.data[index]['email'],
                                   );
                                 },
                               ),
