@@ -11,6 +11,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var now = DateTime.now();
+
     var lastMidnight = DateTime(now.year, now.month, now.day);
     return Scaffold(
       appBar: AppBar(
@@ -34,22 +35,32 @@ class ProfilePage extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             }
-            return Column(
-              children: [
-                SizedBox(
-                  height: 2.h,
-                ),
-                Text(
-                  "Order History for ${now.day}-${now.month}-${now.year}",
-                  style:
-                      TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 2.h,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 2.w),
-                  child: Container(
+            var todaySale = 0.0;
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Welcome,",
+                      style: TextStyle(
+                          fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                  Text(Provider.of<Profile>(context).name,
+                      style: TextStyle(fontSize: 14.sp)),
+                  SizedBox(
+                    height: 2.h,
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Order History for ${now.day}-${now.month}-${now.year}",
+                      style: TextStyle(
+                          fontSize: 14.sp, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 2.h,
+                  ),
+                  Container(
                     height: 50.h,
                     width: 100.w,
                     decoration: BoxDecoration(
@@ -61,16 +72,39 @@ class ProfilePage extends StatelessWidget {
                         Radius.circular(5.0),
                       ),
                     ),
-                    child: ListView(
-                      children: <Widget>[
-                        ...snapshot.data!.docs.map((order) {
-                          return SingleOrderWidget(order: order);
-                        })
-                      ],
+                    child: (snapshot.data!.docs.length == 0)
+                        ? Center(
+                            child: Text(
+                            "No orders Placed Today",
+                            style: TextStyle(
+                                fontSize: 15.sp, fontWeight: FontWeight.bold),
+                          ))
+                        : ListView(
+                            children: <Widget>[
+                              ...snapshot.data!.docs.map((order) {
+                                todaySale += order.get('total');
+                                return SingleOrderWidget(order: order);
+                              })
+                            ],
+                          ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Total Sale For Today: $todaySale",
+                      style: TextStyle(
+                          fontSize: 14.sp, fontWeight: FontWeight.bold),
                     ),
                   ),
-                ),
-              ],
+                  Center(
+                    child: ElevatedButton(
+                      child: Text("See History For past 5 days"),
+                      onPressed: () {},
+                    ),
+                  )
+                ],
+              ),
             );
           },
         ),
