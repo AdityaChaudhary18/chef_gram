@@ -99,17 +99,6 @@ class ProfilePage extends StatelessWidget {
                           fontSize: 14.sp, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Center(
-                    child: ElevatedButton(
-                      child: Text("See History For past 5 days"),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => StatsPage()),
-                        );
-                      },
-                    ),
-                  )
                 ],
               ),
             );
