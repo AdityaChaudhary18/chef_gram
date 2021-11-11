@@ -211,15 +211,6 @@ class _ProfilePageState extends State<ProfilePage> {
                               ],
                             ),
                     ),
-                    SizedBox(height: 2.h),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Total Sale For Today: $todaySale",
-                        style: TextStyle(
-                            fontSize: 14.sp, fontWeight: FontWeight.bold),
-                      ),
-                    ),
                   ],
                 ),
               ),
