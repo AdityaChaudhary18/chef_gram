@@ -63,11 +63,9 @@ class ProfilePage extends StatelessWidget {
                     ),
                     child: ListView(
                       children: <Widget>[
-                        ...snapshot.data!.docs.map(
-                          (order) {
-                            return SingleOrderWidget(order: order);
-                          },
-                        )
+                        ...snapshot.data!.docs.map((order) {
+                          return SingleOrderWidget(order: order);
+                        })
                       ],
                     ),
                   ),
