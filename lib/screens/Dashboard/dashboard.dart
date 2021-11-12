@@ -1,5 +1,6 @@
 import 'package:chef_gram/models/profile_model.dart';
 import 'package:chef_gram/screens/auth/login.dart';
+import 'package:chef_gram/screens/user_profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/src/provider.dart';
@@ -10,7 +11,6 @@ import '../../authentication_service.dart';
 import '../../database_service.dart';
 import '../add_shop.dart';
 import '../excuse-page.dart';
-import '../user_profile/profile.dart';
 import '../takeOrder.dart';
 
 class Dashboard extends StatefulWidget {
@@ -128,7 +128,7 @@ class _DashboardState extends State<Dashboard> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfilePage(),
+                  builder: (context) => ProfilePages(),
                 ));
           },
         ),
