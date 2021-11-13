@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -15,6 +16,13 @@ class AuthenticationService with ChangeNotifier {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: "$name@spice.com", password: password);
+      await FirebaseFirestore.instance.collection('users').doc(_firebaseAuth.currentUser!.uid).get().then((value) {
+        if (value.get('role')=='employee') {
+          print('employee');
+        } else {
+          signOut();
+        }
+      });
       return "Signed In Successfully";
     } on FirebaseAuthException catch (e) {
       return e.message ?? "error";

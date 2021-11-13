@@ -74,9 +74,7 @@ class _BeatSelectorState extends State<BeatSelector> {
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<Profile>(context, listen: true).role == 'admin') {
-      return NotAnEmployee();
-    } else if (Provider.of<Profile>(context, listen: true)
+    if (Provider.of<Profile>(context, listen: true)
                 .timeTargetUpdated
                 ?.toDate()
                 .day ==
@@ -267,23 +265,3 @@ class _BeatSelectorState extends State<BeatSelector> {
   }
 }
 
-class NotAnEmployee extends StatelessWidget {
-  const NotAnEmployee({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(onPressed: (){
-            Provider.of<AuthenticationService>(context, listen: false).signOut();
-          }, icon: Icon(Icons.logout)),
-        ],
-        title: Text("Unauthorised Access"),
-      ),
-      body: Center(
-        child: Text("Not an employee"),
-      ),
-    );
-  }
-}
