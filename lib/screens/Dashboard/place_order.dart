@@ -1,4 +1,5 @@
 import 'package:chef_gram/models/orderModel.dart';
+import 'package:chef_gram/models/profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
@@ -54,6 +55,9 @@ class _PlaceOrderState extends State<PlaceOrder> {
       'orderTakenBy': widget.order.orderTakenBy,
       'total': widget.order.total,
       'items': items,
+      'state': Provider.of<Profile>(context).targetData!['state'],
+      'city': Provider.of<Profile>(context).targetData!['city'],
+      'beat': Provider.of<Profile>(context).targetData!['beat'],
     };
     return orders.add(orderData).then((value) async {
       final snackBar = SnackBar(
