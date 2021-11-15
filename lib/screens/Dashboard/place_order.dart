@@ -50,7 +50,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
       "isConfirmed": false,
       'dateTime': widget.order.timeStamp.toLocal(),
       'customerName': widget.order.customerName,
-      'address': "unknown",
+      'address': widget.order.address,
       'shopName': widget.order.shopName,
       'orderTakenBy': widget.order.orderTakenBy,
       'total': widget.order.total,
