@@ -55,9 +55,9 @@ class _PlaceOrderState extends State<PlaceOrder> {
       'orderTakenBy': widget.order.orderTakenBy,
       'total': widget.order.total,
       'items': items,
-      'state': Provider.of<Profile>(context).targetData!['state'],
-      'city': Provider.of<Profile>(context).targetData!['city'],
-      'beat': Provider.of<Profile>(context).targetData!['beat'],
+      'state': Provider.of<Profile>(context, listen: false).targetData!['state'],
+      'city': Provider.of<Profile>(context, listen: false).targetData!['city'],
+      'beat': Provider.of<Profile>(context, listen: false).targetData!['beat'],
     };
     return orders.add(orderData).then((value) async {
       final snackBar = SnackBar(

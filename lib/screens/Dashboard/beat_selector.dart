@@ -1,11 +1,9 @@
 import 'package:chef_gram/models/profile_model.dart';
 import 'package:chef_gram/screens/Dashboard/dashboard.dart';
-import 'package:chef_gram/screens/auth/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import '../../authentication_service.dart';
 import '../../database_service.dart';
 
 class BeatSelector extends StatefulWidget {
