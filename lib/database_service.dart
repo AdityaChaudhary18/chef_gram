@@ -27,6 +27,7 @@ class DatabaseService {
   }
 
   Profile _profileFromSnapshot(DocumentSnapshot snapshot) {
+    print(snapshot.data());
     shopsToVisit = snapshot.get('targetData.shopsToVisit') ?? [];
     return Profile(
       name: snapshot.get('name') ?? '',

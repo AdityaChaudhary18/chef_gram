@@ -69,6 +69,7 @@ class _TakeOrderState extends State<TakeOrder> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: snapshot.data.length,
                           itemBuilder: (BuildContext context, int index) {
