@@ -5,6 +5,7 @@ import 'package:chef_gram/utils/RoundedButton.dart';
 
 import '../../authentication_service.dart';
 import '../../constants.dart';
+import '../../main.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({Key? key}) : super(key: key);
@@ -60,6 +61,8 @@ class _LogInPageState extends State<LogInPage> {
                       context.read<AuthenticationService>().signIn(
                           name: nameController.text.trim(),
                           password: passwordController.text.trim());
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => MyApp()));
                     },
                     text: "LOG IN",
                   ),
