@@ -15,7 +15,7 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
-  final nameController = TextEditingController();
+  final phoneNoController = TextEditingController();
   final passwordController = TextEditingController();
 
   @override
@@ -36,8 +36,8 @@ class _LogInPageState extends State<LogInPage> {
                 ),
                 TextFormField(
                   decoration: authTextFieldDecoration,
-                  controller: nameController,
-                  keyboardType: TextInputType.emailAddress,
+                  controller: phoneNoController,
+                  keyboardType: TextInputType.number,
                 ),
                 SizedBox(
                   height: 4.h,
@@ -59,7 +59,7 @@ class _LogInPageState extends State<LogInPage> {
                     color: Color(0xFF004AAD),
                     onPressed: () {
                       context.read<AuthenticationService>().signIn(
-                          name: nameController.text.trim(),
+                          number: phoneNoController.text.trim(),
                           password: passwordController.text.trim());
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) => MyApp()));

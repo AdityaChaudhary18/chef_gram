@@ -12,10 +12,10 @@ class AuthenticationService with ChangeNotifier {
     await _firebaseAuth.signOut();
   }
   Future<String> signIn(
-      {required String name, required String password}) async {
+      {required String number, required String password}) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
-          email: "$name@spice.com", password: password);
+          email: "$number@spice.com", password: password);
       await FirebaseFirestore.instance.collection('users').doc(_firebaseAuth.currentUser!.uid).get().then((value) {
         if (value.get('role')=='employee') {
           print('employee');
