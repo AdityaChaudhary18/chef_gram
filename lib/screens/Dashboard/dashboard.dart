@@ -1,7 +1,9 @@
 import 'package:chef_gram/models/profile_model.dart';
 import 'package:chef_gram/screens/auth/login.dart';
+import 'package:chef_gram/screens/user_profile/end_day.dart';
 import 'package:chef_gram/screens/user_profile/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/src/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -21,7 +23,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  bool isExtended = false;
   Future<List> getShopInfo() async {
     return await Provider.of<DatabaseService>(context, listen: false)
         .getShopInfo(
@@ -42,14 +43,10 @@ class _DashboardState extends State<Dashboard> {
         'address': shopInfo[i]["address"],
         'phoneNo': shopInfo[i]["phoneNo"],
         "email": shopInfo[i]["email"],
+        'orderSuccessful': shop['orderSuccessful'],
       });
     }
     return shopDetails;
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   Future<void> _makePhoneCall(String url) async {
@@ -143,11 +140,15 @@ class _DashboardState extends State<Dashboard> {
                 value: 0,
                 child: Text("Reset Beat"),
               ),
-              PopupMenuDivider(),
               PopupMenuItem<int>(
                 value: 1,
+                child: Text("End Day"),
+              ),
+              PopupMenuDivider(),
+              PopupMenuItem<int>(
+                value: 2,
                 child: Text("Log Out"),
-              )
+              ),
             ],
           ),
         ],
@@ -213,10 +214,14 @@ class _DashboardState extends State<Dashboard> {
                                 leading: CircleAvatar(
                                   backgroundColor: snapshot.data[index]
                                           ['isVisited']
-                                      ? Colors.indigoAccent
+                                      ? snapshot.data[index]["orderSuccessful"]
+                                          ? Colors.green
+                                          : Colors.deepPurple
                                       : Colors.red,
                                   child: Icon(snapshot.data[index]['isVisited']
-                                      ? Icons.check
+                                      ? snapshot.data[index]["orderSuccessful"]
+                                          ? FontAwesomeIcons.checkDouble
+                                          : Icons.check
                                       : Icons.clear),
                                   foregroundColor: Colors.white,
                                 ),
@@ -307,10 +312,16 @@ void onSelected(BuildContext context, int item) {
       Provider.of<DatabaseService>(context, listen: false).resetBeatDate();
       break;
     case 1:
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EndDay(),
+          ));
+      break;
+
+    case 2:
       context.read<AuthenticationService>().signOut();
-      MaterialPageRoute<void>(
-        builder: (context) => LogInPage(),
-      );
+
       break;
   }
 }

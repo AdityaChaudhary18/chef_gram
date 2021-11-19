@@ -35,6 +35,7 @@ class _LogInPageState extends State<LogInPage> {
                   height: 4.h,
                 ),
                 TextFormField(
+                  maxLength: 10,
                   decoration: authTextFieldDecoration,
                   controller: phoneNoController,
                   keyboardType: TextInputType.number,
