@@ -18,7 +18,6 @@ class AuthenticationService with ChangeNotifier {
           email: "$number@spice.com", password: password);
       await FirebaseFirestore.instance.collection('users').doc(_firebaseAuth.currentUser!.uid).get().then((value) {
         if (value.get('role')=='employee') {
-          print('employee');
         } else {
           signOut();
         }
