@@ -2,6 +2,7 @@ import 'package:chef_gram/models/profile_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -21,13 +22,15 @@ class _EndDayState extends State<EndDay> {
             Provider.of<Profile>(context, listen: false).targetData!['beat']);
   }
 
+  List shopDetails = [];
+
   Future<List> getShops() async {
     List shopInfo = await getShopInfo();
-    List shopDetails = [];
+    List _shopDetails = [];
     for (int i = 0; i < shopInfo.length; i++) {
       var shop =
           Provider.of<DatabaseService>(context, listen: false).shopsToVisit[i];
-      shopDetails.add({
+      _shopDetails.add({
         "shopName": shopInfo[i]["shopName"],
         "shopOwner": shopInfo[i]["shopOwner"],
         'isVisited': shop['isVisited'],
@@ -39,7 +42,19 @@ class _EndDayState extends State<EndDay> {
         'orderSuccessful': shop['orderSuccessful'],
       });
     }
-    return shopDetails;
+    shopDetails = _shopDetails;
+    return _shopDetails;
+  }
+  
+  void endDay() async{
+    final DateFormat formatter = DateFormat('dd-MM-yyyy');
+    Map<String, dynamic> data = {
+      "dateTimeSubmitted": DateTime.now(),
+      "date": formatter.format(Provider.of<Profile>(context, listen: false).timeTargetUpdated!.toDate()),
+      "name" : Provider.of<Profile>(context, listen: false).name,
+      "shopDetails": shopDetails
+    };
+    await FirebaseFirestore.instance.collection('daily-reports').add(data);
   }
 
   @override
@@ -50,83 +65,88 @@ class _EndDayState extends State<EndDay> {
         title: Text("End Day"),
       ),
       body: Container(
-        child: FutureBuilder(
-          future: getShops(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (!snapshot.hasData ||
-                snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.15),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 2.w, vertical: 1.h),
-                          child: Container(
+        child: Column(
+          children: [
+            FutureBuilder(
+              future: getShops(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (!snapshot.hasData ||
+                    snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        children: [
+                          Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.15),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset:
+                                      Offset(0, 3), // changes position of shadow
+                                ),
+                              ],
                             ),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: snapshot.data[index]
-                                        ['isVisited']
-                                    ? snapshot.data[index]["orderSuccessful"]
-                                        ? Colors.green
-                                        : Colors.deepPurple
-                                    : Colors.red,
-                                child: Icon(snapshot.data[index]['isVisited']
-                                    ? snapshot.data[index]["orderSuccessful"]
-                                        ? FontAwesomeIcons.checkDouble
-                                        : Icons.check
-                                    : Icons.clear),
-                                foregroundColor: Colors.white,
-                              ),
-                              title: Text(
-                                snapshot.data[index]['shopName'],
-                                style: TextStyle(fontSize: 18.sp),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    snapshot.data[index]['shopOwner'],
-                                    style: TextStyle(fontSize: 12.sp),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 2.w, vertical: 1.h),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundColor: snapshot.data[index]
+                                            ['isVisited']
+                                        ? snapshot.data[index]["orderSuccessful"]
+                                            ? Colors.green
+                                            : Colors.deepPurple
+                                        : Colors.red,
+                                    child: Icon(snapshot.data[index]['isVisited']
+                                        ? snapshot.data[index]["orderSuccessful"]
+                                            ? FontAwesomeIcons.checkDouble
+                                            : Icons.check
+                                        : Icons.clear),
+                                    foregroundColor: Colors.white,
                                   ),
-                                  Text(
-                                    snapshot.data[index]['comment'],
-                                    style: TextStyle(fontSize: 10.sp),
-                                  )
-                                ],
+                                  title: Text(
+                                    snapshot.data[index]['shopName'],
+                                    style: TextStyle(fontSize: 18.sp),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        snapshot.data[index]['shopOwner'],
+                                        style: TextStyle(fontSize: 12.sp),
+                                      ),
+                                      Text(
+                                        snapshot.data[index]['comment'],
+                                        style: TextStyle(fontSize: 10.sp),
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    ],
+                        ],
+                      );
+                    },
                   );
-                },
-              );
-            }
-          },
+                }
+              },
+            ),
+            ElevatedButton(child: Text("End Day"), onPressed: endDay,)
+          ],
         ),
       ),
     );
