@@ -188,8 +188,9 @@ class _DashboardState extends State<Dashboard> {
               context,
               MaterialPageRoute(builder: (context) => AddShop()),
             );
+          } else {
+            _showMessage("Sorry, your day has already ended!");
           }
-          _showMessage("Sorry, your day has already ended!");
         },
         label: Row(
           children: [
@@ -382,31 +383,32 @@ void onSelected(BuildContext context, int item) {
             MaterialPageRoute(
               builder: (context) => EndDay(),
             ));
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                "Warning",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[Text("You already ended your Day!")],
+                ),
+              ),
+              actions: <Widget>[
+                ElevatedButton(
+                  child: Text("Close"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              "Warning",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[Text("You already ended your Day!")],
-              ),
-            ),
-            actions: <Widget>[
-              ElevatedButton(
-                child: Text("Close"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
 
       break;
 

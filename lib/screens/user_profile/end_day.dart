@@ -45,18 +45,24 @@ class _EndDayState extends State<EndDay> {
     shopDetails = _shopDetails;
     return _shopDetails;
   }
-  
-  void endDay() async{
+
+  void endDay() async {
     final DateFormat formatter = DateFormat('dd-MM-yyyy');
     Map<String, dynamic> data = {
       "dateTimeSubmitted": DateTime.now(),
-      "date": formatter.format(Provider.of<Profile>(context, listen: false).timeTargetUpdated!.toDate()),
-      "name" : Provider.of<Profile>(context, listen: false).name,
+      "date": formatter.format(Provider.of<Profile>(context, listen: false)
+          .timeTargetUpdated!
+          .toDate()),
+      "name": Provider.of<Profile>(context, listen: false).name,
       "shopDetails": shopDetails,
-      "totalSale": Provider.of<Profile>(context, listen: false).targetData!['todaySale']
+      "totalSale":
+          Provider.of<Profile>(context, listen: false).targetData!['todaySale']
     };
     await FirebaseFirestore.instance.collection('daily-reports').add(data);
-    await FirebaseFirestore.instance.collection('users').doc(Provider.of<DatabaseService>(context, listen: false).uid).update({"hasDayEnded" : true});
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(Provider.of<DatabaseService>(context, listen: false).uid)
+        .update({"hasDayEnded": true});
   }
 
   @override
@@ -91,8 +97,8 @@ class _EndDayState extends State<EndDay> {
                                   color: Colors.grey.withOpacity(0.15),
                                   spreadRadius: 5,
                                   blurRadius: 7,
-                                  offset:
-                                      Offset(0, 3), // changes position of shadow
+                                  offset: Offset(
+                                      0, 3), // changes position of shadow
                                 ),
                               ],
                             ),
@@ -108,12 +114,15 @@ class _EndDayState extends State<EndDay> {
                                   leading: CircleAvatar(
                                     backgroundColor: snapshot.data[index]
                                             ['isVisited']
-                                        ? snapshot.data[index]["orderSuccessful"]
+                                        ? snapshot.data[index]
+                                                ["orderSuccessful"]
                                             ? Colors.green
                                             : Colors.deepPurple
                                         : Colors.red,
-                                    child: Icon(snapshot.data[index]['isVisited']
-                                        ? snapshot.data[index]["orderSuccessful"]
+                                    child: Icon(snapshot.data[index]
+                                            ['isVisited']
+                                        ? snapshot.data[index]
+                                                ["orderSuccessful"]
                                             ? FontAwesomeIcons.checkDouble
                                             : Icons.check
                                         : Icons.clear),
@@ -124,7 +133,8 @@ class _EndDayState extends State<EndDay> {
                                     style: TextStyle(fontSize: 18.sp),
                                   ),
                                   subtitle: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         snapshot.data[index]['shopOwner'],
@@ -147,8 +157,15 @@ class _EndDayState extends State<EndDay> {
                 }
               },
             ),
-            Text("Today Sale: ${Provider.of<Profile>(context, listen: false).targetData!['todaySale']}"),
-            ElevatedButton(child: Text("End Day"), onPressed: endDay,)
+            Text(
+                "Today Sale: ${Provider.of<Profile>(context, listen: false).targetData!['todaySale']}"),
+            ElevatedButton(
+              child: Text("End Day"),
+              onPressed: () {
+                endDay();
+                Navigator.pop(context);
+              },
+            )
           ],
         ),
       ),
