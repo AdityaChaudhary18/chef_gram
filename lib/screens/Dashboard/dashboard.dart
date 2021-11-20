@@ -57,6 +57,33 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  void _showMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Warning",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[Text(message)],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              child: Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     void _showDialog(String shopName, String shopOwner, String address,
@@ -112,6 +139,7 @@ class _DashboardState extends State<Dashboard> {
         },
       );
     }
+
     return Scaffold(
       backgroundColor: Colors.indigo.shade50,
       appBar: AppBar(
@@ -155,10 +183,13 @@ class _DashboardState extends State<Dashboard> {
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Colors.indigo,
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddShop()),
-          );
+          if (!Provider.of<Profile>(context, listen: false).hasDayEnded) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddShop()),
+            );
+          }
+          _showMessage("Sorry, your day has already ended!");
         },
         label: Row(
           children: [
@@ -171,135 +202,169 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
       body: Container(
-        child: (Provider.of<Profile>(context, listen: false).hasDayEnded) ? Text("You have already submitted the report for today.") : FutureBuilder(
-          future: getShops(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (!snapshot.hasData ||
-                snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
+        child: (Provider.of<Profile>(context, listen: false).hasDayEnded)
+            ? Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 10.h),
+                  child: Column(
                     children: [
                       Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.15),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
+                        height: 400,
+                        width: 400,
+                        child: Image.asset('images/dayDone.png'),
+                      ),
+                      Text(
+                        "Relax for Today",
+                        style: TextStyle(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic),
+                      ),
+                      SizedBox(
+                        height: 2.h,
+                      ),
+                      Text("You have already submitted the report for today.",
+                          style: TextStyle(fontSize: 10.sp)),
+                    ],
+                  ),
+                ),
+              )
+            : FutureBuilder(
+                future: getShops(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData ||
+                      snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.15),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: Offset(
+                                        0, 3), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 2.w, vertical: 1.h),
+                                child: Slidable(
+                                  actionPane: SlidableDrawerActionPane(),
+                                  actionExtentRatio: 0.25,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                        backgroundColor: snapshot.data[index]
+                                                ['isVisited']
+                                            ? snapshot.data[index]
+                                                    ["orderSuccessful"]
+                                                ? Colors.green
+                                                : Colors.deepPurple
+                                            : Colors.red,
+                                        child: Icon(snapshot.data[index]
+                                                ['isVisited']
+                                            ? snapshot.data[index]
+                                                    ["orderSuccessful"]
+                                                ? FontAwesomeIcons.checkDouble
+                                                : Icons.check
+                                            : Icons.clear),
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      title: Text(
+                                        snapshot.data[index]['shopName'],
+                                        style: TextStyle(fontSize: 18.sp),
+                                      ),
+                                      subtitle: Text(
+                                        snapshot.data[index]['shopOwner'],
+                                        style: TextStyle(fontSize: 12.sp),
+                                      ),
+                                    ),
+                                  ),
+                                  secondaryActions: [
+                                    IconSlideAction(
+                                      caption: 'Take Order',
+                                      color: Colors.blue,
+                                      icon: Icons.add,
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => TakeOrder(
+                                                  shopDetails:
+                                                      snapshot.data[index])),
+                                        );
+                                      },
+                                    ),
+                                    IconSlideAction(
+                                      caption: 'Get Details',
+                                      color: Colors.deepPurple,
+                                      icon: Icons.info_outline,
+                                      onTap: () {
+                                        _showDialog(
+                                          snapshot.data[index]['shopName'],
+                                          snapshot.data[index]['shopOwner'],
+                                          snapshot.data[index]['address'],
+                                          snapshot.data[index]['phoneNo'],
+                                          snapshot.data[index]['email'],
+                                        );
+                                      },
+                                    ),
+                                    IconSlideAction(
+                                      caption: 'Mark Entry',
+                                      color: Colors.green,
+                                      icon: Icons.check,
+                                      onTap: () {
+                                        if (snapshot.data[index]["isVisited"]) {
+                                          final snackBar = SnackBar(
+                                            backgroundColor: Colors.lightBlue,
+                                            duration: Duration(seconds: 2),
+                                            content: Text(
+                                              "Attendance Marked Successfully",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          );
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(snackBar);
+                                        } else {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ExcusePage(
+                                                          shopRef: snapshot
+                                                              .data[index]
+                                                                  ['shopRef']
+                                                              .toString())));
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 2.w, vertical: 1.h),
-                          child: Slidable(
-                            actionPane: SlidableDrawerActionPane(),
-                            actionExtentRatio: 0.25,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  backgroundColor: snapshot.data[index]
-                                          ['isVisited']
-                                      ? snapshot.data[index]["orderSuccessful"]
-                                          ? Colors.green
-                                          : Colors.deepPurple
-                                      : Colors.red,
-                                  child: Icon(snapshot.data[index]['isVisited']
-                                      ? snapshot.data[index]["orderSuccessful"]
-                                          ? FontAwesomeIcons.checkDouble
-                                          : Icons.check
-                                      : Icons.clear),
-                                  foregroundColor: Colors.white,
-                                ),
-                                title: Text(
-                                  snapshot.data[index]['shopName'],
-                                  style: TextStyle(fontSize: 18.sp),
-                                ),
-                                subtitle: Text(
-                                  snapshot.data[index]['shopOwner'],
-                                  style: TextStyle(fontSize: 12.sp),
-                                ),
-                              ),
-                            ),
-                            secondaryActions: [
-                              IconSlideAction(
-                                caption: 'Take Order',
-                                color: Colors.blue,
-                                icon: Icons.add,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => TakeOrder(
-                                            shopDetails: snapshot.data[index])),
-                                  );
-                                },
-                              ),
-                              IconSlideAction(
-                                caption: 'Get Details',
-                                color: Colors.deepPurple,
-                                icon: Icons.info_outline,
-                                onTap: () {
-                                  _showDialog(
-                                    snapshot.data[index]['shopName'],
-                                    snapshot.data[index]['shopOwner'],
-                                    snapshot.data[index]['address'],
-                                    snapshot.data[index]['phoneNo'],
-                                    snapshot.data[index]['email'],
-                                  );
-                                },
-                              ),
-                              IconSlideAction(
-                                caption: 'Mark Entry',
-                                color: Colors.green,
-                                icon: Icons.check,
-                                onTap: () {
-                                  if (snapshot.data[index]["isVisited"]) {
-                                    final snackBar = SnackBar(
-                                      backgroundColor: Colors.lightBlue,
-                                      duration: Duration(seconds: 2),
-                                      content: Text(
-                                        "Attendance Marked Successfully",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  } else {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ExcusePage(
-                                                shopRef: snapshot.data[index]
-                                                        ['shopRef']
-                                                    .toString())));
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
+                        );
+                      },
+                    );
+                  }
                 },
-              );
-            }
-          },
-        ),
+              ),
       ),
     );
   }
@@ -311,11 +376,38 @@ void onSelected(BuildContext context, int item) {
       Provider.of<DatabaseService>(context, listen: false).resetBeatDate();
       break;
     case 1:
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EndDay(),
-          ));
+      if (!Provider.of<Profile>(context, listen: false).hasDayEnded) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EndDay(),
+            ));
+      }
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Warning",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[Text("You already ended your Day!")],
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text("Close"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+
       break;
 
     case 2:
