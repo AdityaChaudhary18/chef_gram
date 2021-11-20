@@ -70,7 +70,7 @@ class DatabaseService {
       shopData['isVisited'] = false;
       shopData['orderSuccessful'] = false;
       shopData['shopRef'] = shop['shopRef'];
-      shopData['comment'] = '';
+      shopData['comment'] = 'Not Visited';
       shopsToVisit.add(shopData);
     }
     _profileCollection.doc(uid).update({
