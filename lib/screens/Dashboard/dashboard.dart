@@ -112,7 +112,6 @@ class _DashboardState extends State<Dashboard> {
         },
       );
     }
-
     return Scaffold(
       backgroundColor: Colors.indigo.shade50,
       appBar: AppBar(
@@ -172,7 +171,7 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
       body: Container(
-        child: FutureBuilder(
+        child: (Provider.of<Profile>(context, listen: false).hasDayEnded) ? Text("You have already submitted the report for today.") : FutureBuilder(
           future: getShops(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData ||

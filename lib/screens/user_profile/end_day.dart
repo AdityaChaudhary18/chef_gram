@@ -55,6 +55,7 @@ class _EndDayState extends State<EndDay> {
       "shopDetails": shopDetails
     };
     await FirebaseFirestore.instance.collection('daily-reports').add(data);
+    await FirebaseFirestore.instance.collection('users').doc(Provider.of<DatabaseService>(context, listen: false).uid).update({"hasDayEnded" : true});
   }
 
   @override

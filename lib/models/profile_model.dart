@@ -7,6 +7,7 @@ class Profile {
   String role;
   Timestamp? timeTargetUpdated;
   String phoneNo;
+  bool hasDayEnded;
   Map<String, dynamic>? targetData;
 
   Profile(
@@ -14,6 +15,7 @@ class Profile {
       required this.monthlyTarget,
       required this.age,
       this.targetData,
+        required this.hasDayEnded,
         required this.phoneNo,
       required this.role,
       this.timeTargetUpdated});
@@ -21,6 +23,7 @@ class Profile {
   Profile.fromJson(Map<String, dynamic>? json)
       : name = json!['name'],
         age = json['age'],
+  hasDayEnded = json['hasDayEnded'],
         monthlyTarget = json['monthlyTarget'],
         targetData = json['targetData'],
         role = json['role'],
