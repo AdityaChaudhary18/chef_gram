@@ -38,7 +38,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
     FirebaseFirestore.instance
         .doc(
             'users/${Provider.of<DatabaseService>(context, listen: false).uid}')
-        .update({"targetData.shopsToVisit": visits});
+        .update({
+      "targetData.shopsToVisit": visits,
+      "targetData.todaySale": doc.get('targetData.todaySale') + widget.order.total
+    });
   }
 
   Future<void> placeOrder() async {
@@ -55,7 +58,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
       'orderTakenBy': widget.order.orderTakenBy,
       'total': widget.order.total,
       'items': items,
-      'state': Provider.of<Profile>(context, listen: false).targetData!['state'],
+      'state':
+          Provider.of<Profile>(context, listen: false).targetData!['state'],
       'city': Provider.of<Profile>(context, listen: false).targetData!['city'],
       'beat': Provider.of<Profile>(context, listen: false).targetData!['beat'],
     };
@@ -122,7 +126,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                 fontSize: 12.sp, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            "A2-401 Eldeco Elegance Vibhuti Khand Gomti Nagar Lucknow",
+                            widget.order.address,
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                           ),

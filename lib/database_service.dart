@@ -76,6 +76,7 @@ class DatabaseService {
     _profileCollection.doc(uid).update({
       'hasDayEnded': false,
       'targetData': {
+        'todaySale': 0,
         'todayTarget': 10000,
         'state': state,
         'city': city,

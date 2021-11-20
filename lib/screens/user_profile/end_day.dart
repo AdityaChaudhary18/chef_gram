@@ -52,7 +52,8 @@ class _EndDayState extends State<EndDay> {
       "dateTimeSubmitted": DateTime.now(),
       "date": formatter.format(Provider.of<Profile>(context, listen: false).timeTargetUpdated!.toDate()),
       "name" : Provider.of<Profile>(context, listen: false).name,
-      "shopDetails": shopDetails
+      "shopDetails": shopDetails,
+      "totalSale": Provider.of<Profile>(context, listen: false).targetData!['todaySale']
     };
     await FirebaseFirestore.instance.collection('daily-reports').add(data);
     await FirebaseFirestore.instance.collection('users').doc(Provider.of<DatabaseService>(context, listen: false).uid).update({"hasDayEnded" : true});
@@ -146,6 +147,7 @@ class _EndDayState extends State<EndDay> {
                 }
               },
             ),
+            Text("Today Sale: ${Provider.of<Profile>(context, listen: false).targetData!['todaySale']}"),
             ElevatedButton(child: Text("End Day"), onPressed: endDay,)
           ],
         ),
