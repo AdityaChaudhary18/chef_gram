@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../database_service.dart';
+import '../../main.dart';
 
 class EndDay extends StatefulWidget {
   const EndDay({Key? key}) : super(key: key);
@@ -68,9 +69,10 @@ class _EndDayState extends State<EndDay> {
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<Profile>(context, listen: true).hasDayEnded) {
-      return Dashboard();
-    }
+    // if (Provider.of<Profile>(context, listen: true).hasDayEnded) {
+    //   Navigator.pop(context);
+    //   return MyApp();
+    // }
     return Scaffold(
       backgroundColor: Colors.indigo.shade50,
       appBar: AppBar(
@@ -175,52 +177,8 @@ class _EndDayState extends State<EndDay> {
                   child: ElevatedButton(
                     child: Text("End Day"),
                     onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(
-                              "Warning",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            content: SingleChildScrollView(
-                              child: ListBody(
-                                children: <Widget>[
-                                  Center(
-                                    child: Text(
-                                      "Are you sure you want to end your day?",
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 2.h,
-                                  ),
-                                  Text(
-                                    "This action cannot be undone!",
-                                    textAlign: TextAlign.center,
-                                  )
-                                ],
-                              ),
-                            ),
-                            actions: <Widget>[
-                              ElevatedButton(
-                                child: Text("No"),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              ElevatedButton(
-                                child: Text("Yes"),
-                                onPressed: () {
-                                  endDay();
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      endDay();
+                      Navigator.pop(context);
                     },
                   ),
                 ),

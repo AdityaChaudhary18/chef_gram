@@ -383,11 +383,56 @@ void onSelected(BuildContext context, int item) {
       break;
     case 1:
       if (!Provider.of<Profile>(context, listen: false).hasDayEnded) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EndDay(),
-            ));
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                "Warning",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Center(
+                      child: Text(
+                        "Are you sure you want to end your day?",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    Text(
+                      "This action cannot be undone!",
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                ElevatedButton(
+                  child: Text("No"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ElevatedButton(
+                  child: Text("Yes"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EndDay(),
+                        ));
+                  },
+                ),
+              ],
+            );
+          },
+        );
       } else {
         showDialog(
           context: context,
@@ -414,12 +459,9 @@ void onSelected(BuildContext context, int item) {
           },
         );
       }
-
       break;
-
     case 2:
       context.read<AuthenticationService>().signOut();
-
       break;
   }
 }
