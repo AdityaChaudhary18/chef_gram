@@ -74,6 +74,7 @@ class _EndDayState extends State<EndDay> {
       ),
       body: Container(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FutureBuilder(
               future: getShops(),
@@ -157,14 +158,25 @@ class _EndDayState extends State<EndDay> {
                 }
               },
             ),
-            Text(
-                "Today Sale: ${Provider.of<Profile>(context, listen: false).targetData!['todaySale']}"),
-            ElevatedButton(
-              child: Text("End Day"),
-              onPressed: () {
-                endDay();
-                Navigator.pop(context);
-              },
+            Column(
+              children: [
+                Text("Total Sale"),
+                Text(
+                  "₹ ${Provider.of<Profile>(context, listen: false).targetData!['todaySale']}",
+                  style:
+                      TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  width: 50.w,
+                  child: ElevatedButton(
+                    child: Text("End Day"),
+                    onPressed: () {
+                      endDay();
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ],
             )
           ],
         ),

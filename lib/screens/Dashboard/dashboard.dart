@@ -226,6 +226,11 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       Text("You have already submitted the report for today.",
                           style: TextStyle(fontSize: 10.sp)),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text("TIP: You can reset beat to place more orders!",
+                          style: TextStyle(fontSize: 10.sp)),
                     ],
                   ),
                 ),
