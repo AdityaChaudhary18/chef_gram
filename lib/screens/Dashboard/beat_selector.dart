@@ -38,7 +38,7 @@ class _BeatSelectorState extends State<BeatSelector> {
   Future<void> getCities() async {
     List<String> _cityList = [];
     var cityCollection = await FirebaseFirestore.instance
-        .collection('states/${state.replaceAll(' ', '')}/cities')
+        .collection('states/${state}/cities')
         .get();
     for (var city in cityCollection.docs) {
       _cityList.add(city['cityName']);
@@ -50,7 +50,7 @@ class _BeatSelectorState extends State<BeatSelector> {
 
   Future<void> getBeat() async {
     var beatCollection = await FirebaseFirestore.instance
-        .collection('states/${state.replaceAll(' ', '')}/cities')
+        .collection('states/${state}/cities')
         .where('cityName', isEqualTo: city)
         .get();
     List<String> _beats = [];
@@ -262,4 +262,3 @@ class _BeatSelectorState extends State<BeatSelector> {
       );
   }
 }
-
