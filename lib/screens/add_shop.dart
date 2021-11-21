@@ -23,6 +23,8 @@ class _AddShopState extends State<AddShop> {
 
   void addShop() {
     Map<String, dynamic> data = {
+      "state": Provider.of<Profile>(context, listen: false).targetData!['state'],
+      "city": Provider.of<Profile>(context, listen: false).targetData!['city'],
       "address": addressController.value.text,
       "email": emailController.value.text,
       "beat": Provider.of<Profile>(context, listen: false).targetData!['beat'],
