@@ -76,7 +76,6 @@ class DatabaseService {
       'hasDayEnded': false,
       'targetData': {
         'todaySale': 0,
-        'todayTarget': 10000,
         'state': state,
         'city': city,
         'beat': beat,
