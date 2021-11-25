@@ -4,6 +4,7 @@ import 'package:chef_gram/screens/user_profile/end_day.dart';
 import 'package:chef_gram/screens/user_profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/src/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -23,6 +24,35 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  bool loading = false;
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await Geolocator.getCurrentPosition(
+        forceAndroidLocationManager: true,
+        desiredAccuracy: LocationAccuracy.high);
+  }
+
   Future<List> getShopInfo() async {
     return await Provider.of<DatabaseService>(context, listen: false)
         .getShopInfo(
@@ -44,6 +74,8 @@ class _DashboardState extends State<Dashboard> {
         'phoneNo': shopInfo[i]["phoneNo"],
         "email": shopInfo[i]["email"],
         'orderSuccessful': shop['orderSuccessful'],
+        'latitude': shopInfo[i]['latitude'],
+        'longitude': shopInfo[i]['longitude'],
       });
     }
     return shopDetails;
@@ -306,14 +338,44 @@ class _DashboardState extends State<Dashboard> {
                                       caption: 'Take Order',
                                       color: Colors.blue,
                                       icon: Icons.add,
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => TakeOrder(
-                                                  shopDetails:
-                                                      snapshot.data[index])),
-                                        );
+                                      onTap: () async {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          content: Text(
+                                              "Checking Location. Please wait..."),
+                                          backgroundColor: Colors.blue,
+                                        ));
+                                        await _determinePosition()
+                                            .then((value) {
+                                          ScaffoldMessenger.of(context)
+                                              .hideCurrentSnackBar();
+                                          if (Geolocator.distanceBetween(
+                                                  value.latitude,
+                                                  value.longitude,
+                                                  snapshot.data[index]
+                                                      ['latitude'],
+                                                  snapshot.data[index]
+                                                      ['longitude']) <
+                                              100) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      TakeOrder(
+                                                          shopDetails: snapshot
+                                                              .data[index])),
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Get within 100 meter of location"),
+                                              backgroundColor: Colors.red,
+                                              duration:
+                                                  Duration(milliseconds: 3000),
+                                            ));
+                                          }
+                                        });
                                       },
                                     ),
                                     IconSlideAction(
@@ -334,7 +396,7 @@ class _DashboardState extends State<Dashboard> {
                                       caption: 'Mark Entry',
                                       color: Colors.green,
                                       icon: Icons.check,
-                                      onTap: () {
+                                      onTap: () async {
                                         if (snapshot.data[index]["isVisited"]) {
                                           final snackBar = SnackBar(
                                             backgroundColor: Colors.lightBlue,
@@ -348,15 +410,44 @@ class _DashboardState extends State<Dashboard> {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(snackBar);
                                         } else {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ExcusePage(
-                                                          shopRef: snapshot
-                                                              .data[index]
-                                                                  ['shopRef']
-                                                              .toString())));
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text(
+                                                "Checking Location. Please wait..."),
+                                            backgroundColor: Colors.blue,
+                                          ));
+                                          await _determinePosition()
+                                              .then((value) {
+                                            ScaffoldMessenger.of(context)
+                                                .hideCurrentSnackBar();
+                                            if (Geolocator.distanceBetween(
+                                                    value.latitude,
+                                                    value.longitude,
+                                                    snapshot.data[index]
+                                                        ['latitude'],
+                                                    snapshot.data[index]
+                                                        ['longitude']) <
+                                                100) {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ExcusePage(
+                                                              shopRef: snapshot
+                                                                  .data[index][
+                                                                      'shopRef']
+                                                                  .toString())));
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    "Get within 100 meter of location"),
+                                                backgroundColor: Colors.red,
+                                                duration: Duration(
+                                                    milliseconds: 3000),
+                                              ));
+                                            }
+                                          });
                                         }
                                       },
                                     ),

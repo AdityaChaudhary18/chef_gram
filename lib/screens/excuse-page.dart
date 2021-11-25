@@ -78,7 +78,15 @@ class _ExcusePageState extends State<ExcusePage> {
             ElevatedButton(
               child: Text("Mark Attendance"),
               onPressed: () {
-                markAttendance();
+                if (dropdownValue != null)
+                  markAttendance();
+                else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("Select a reason first!"),
+                    backgroundColor: Colors.red,
+                    duration: Duration(milliseconds: 3000),
+                  ));
+                }
               },
             )
           ],
