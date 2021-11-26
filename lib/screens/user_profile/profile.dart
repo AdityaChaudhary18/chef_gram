@@ -68,11 +68,11 @@ class _ProfilePagesState extends State<ProfilePages> {
                 _ChartData(
                     'Daily Sale',
                     (dailySales /
-                            Provider.of<Profile>(context)
-                                .targetData!['todayTarget']) *
+                            (Provider.of<Profile>(context).monthlyTarget /
+                                30)) *
                         100,
                     const Color.fromRGBO(235, 97, 143, 1),
-                    "${((dailySales / Provider.of<Profile>(context).targetData!['todayTarget']) * 100).toStringAsFixed(2)} %"),
+                    "${((dailySales / (Provider.of<Profile>(context).monthlyTarget / 30)) * 100).toStringAsFixed(2)} %"),
                 _ChartData(
                     'Monthly Sale',
                     (monthlySales /

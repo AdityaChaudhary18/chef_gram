@@ -32,6 +32,34 @@ class _DashboardState extends State<Dashboard> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Attention Required",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('You will be redirected to location settings'),
+                  Text('Allow location services to use app')
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text("OK"),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  await Geolocator.openLocationSettings();
+                },
+              ),
+            ],
+          );
+        },
+      );
       return Future.error('Location services are disabled.');
     }
 
@@ -39,11 +67,69 @@ class _DashboardState extends State<Dashboard> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                "Attention Required",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text('Enable location permission to use app'),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                ElevatedButton(
+                  child: Text("OK"),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await Geolocator.openAppSettings();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        await Geolocator.requestPermission();
         return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Attention Required",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('You will be redirected to settings app'),
+                  Text(
+                      'Allow location permission in app settings to "Allow while using App"')
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text("OK"),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  await Geolocator.openAppSettings();
+                },
+              ),
+            ],
+          );
+        },
+      );
+
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
@@ -339,16 +425,25 @@ class _DashboardState extends State<Dashboard> {
                                       color: Colors.blue,
                                       icon: Icons.add,
                                       onTap: () async {
+                                        print("Called");
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
                                           content: Text(
                                               "Checking Location. Please wait..."),
                                           backgroundColor: Colors.blue,
                                         ));
+                                        print("Called2");
                                         await _determinePosition()
                                             .then((value) {
                                           ScaffoldMessenger.of(context)
                                               .hideCurrentSnackBar();
+                                          print(Geolocator.distanceBetween(
+                                              value.latitude,
+                                              value.longitude,
+                                              snapshot.data[index]['latitude'],
+                                              snapshot.data[index]
+                                                  ['longitude']));
+                                          print("Called3");
                                           if (Geolocator.distanceBetween(
                                                   value.latitude,
                                                   value.longitude,
