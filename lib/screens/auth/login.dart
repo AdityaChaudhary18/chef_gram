@@ -125,17 +125,18 @@ class _LogInPageState extends State<LogInPage> {
                                           password:
                                               passwordController.text.trim())
                                       .then((value) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: Text(value),
-                                      backgroundColor: Colors.blue,
-                                      duration: Duration(milliseconds: 4000),
-                                    ));
                                     if (value == 'Signed In Successfully') {
                                       Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => MyApp()));
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                        content: Text(value),
+                                        backgroundColor: Colors.red,
+                                        duration: Duration(milliseconds: 4000),
+                                      ));
                                     }
                                   });
                                 }
