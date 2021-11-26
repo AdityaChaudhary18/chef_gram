@@ -109,4 +109,9 @@ class DatabaseService {
     FirebaseFirestore.instance.collection('users').doc(uid).update(
         {"timeTargetUpdated": DateTime.now().subtract(Duration(days: 1))});
   }
+
+  void clearShopsToVisit() {
+    shopsToVisit.clear();
+    _shopsInfo.clear();
+  }
 }

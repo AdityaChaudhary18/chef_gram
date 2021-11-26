@@ -1,10 +1,13 @@
 import 'package:chef_gram/models/profile_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../constants.dart';
+import '../database_service.dart';
+import '../main.dart';
 
 class AddShop extends StatefulWidget {
   const AddShop({Key? key}) : super(key: key);
@@ -14,16 +17,130 @@ class AddShop extends StatefulWidget {
 }
 
 class _AddShopState extends State<AddShop> {
+  late var location;
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Attention Required",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('You will be redirected to location settings'),
+                  Text('Allow location services to use app')
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text("OK"),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  await Geolocator.openLocationSettings();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                "Attention Required",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text('Enable location permission to use app'),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                ElevatedButton(
+                  child: Text("OK"),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await Geolocator.openAppSettings();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        await Geolocator.requestPermission();
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Attention Required",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('You will be redirected to settings app'),
+                  Text(
+                      'Allow location permission in app settings to "Allow while using App"')
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text("OK"),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  await Geolocator.openAppSettings();
+                },
+              ),
+            ],
+          );
+        },
+      );
+
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await Geolocator.getCurrentPosition(
+        forceAndroidLocationManager: true,
+        desiredAccuracy: LocationAccuracy.high);
+  }
+
   final shopNameController = TextEditingController();
   final addressController = TextEditingController();
   final ownerNameController = TextEditingController();
   final phoneNoController = TextEditingController();
   final emailController = TextEditingController();
-  final pinCodeController = TextEditingController();
 
-  void addShop() {
+  void addShop() async {
     Map<String, dynamic> data = {
-      "state": Provider.of<Profile>(context, listen: false).targetData!['state'],
+      "state":
+          Provider.of<Profile>(context, listen: false).targetData!['state'],
       "city": Provider.of<Profile>(context, listen: false).targetData!['city'],
       "address": addressController.value.text,
       "email": emailController.value.text,
@@ -31,12 +148,32 @@ class _AddShopState extends State<AddShop> {
       "phoneNo": phoneNoController.value.text,
       "shopName": shopNameController.value.text,
       "shopOwner": ownerNameController.value.text,
-      "employeeName": Provider.of<Profile>(context, listen: false).name
+      'latitude': location.latitude,
+      'longitude': location.longitude
     };
-
-    CollectionReference shops = FirebaseFirestore.instance.collection('shopPermission');
-    shops.add(data);
-    Navigator.pop(context);
+    var id = '';
+    CollectionReference shops = FirebaseFirestore.instance.collection('shops');
+    shops.add(data).then((value) async {
+      id = value.id;
+      var doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(Provider.of<DatabaseService>(context, listen: false).uid)
+          .get();
+      List shopsToVisit = doc.get('targetData.shopsToVisit');
+      shopsToVisit.add({
+        'comment': "Not Visited",
+        'isVisited': false,
+        'orderSuccessful': false,
+        'shopRef': 'shops/${id}'
+      });
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(Provider.of<DatabaseService>(context, listen: false).uid)
+          .update({'targetData.shopsToVisit': shopsToVisit});
+      Provider.of<DatabaseService>(context, listen: false).clearShopsToVisit();
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => MyApp()));
+    });
   }
 
   void dispose() {
@@ -44,7 +181,6 @@ class _AddShopState extends State<AddShop> {
     ownerNameController.dispose();
     emailController.dispose();
     addressController.dispose();
-    pinCodeController.dispose();
     phoneNoController.dispose();
     super.dispose();
   }
@@ -115,24 +251,16 @@ class _AddShopState extends State<AddShop> {
             SizedBox(
               height: 2.h,
             ),
-            TextFormField(
-              controller: pinCodeController,
-              decoration: authTextFieldDecoration.copyWith(
-                labelText: "Pin Code",
-                hintText: "Enter shop pin code",
-              ),
-            ),
-            SizedBox(
-              height: 2.h,
-            ),
             ElevatedButton(
               child: Text("Add Shop"),
-              onPressed: () {
+              onPressed: () async {
+                location = await _determinePosition();
                 addShop();
               },
             ),
             Text(
-              "This will get updated only after Admin Approves your request",
+              "Add shop only when you are at the location.",
+              style: TextStyle(color: Colors.red),
               textAlign: TextAlign.center,
             )
           ],
