@@ -3,6 +3,7 @@ import 'package:chef_gram/screens/auth/login.dart';
 import 'package:chef_gram/screens/user_profile/end_day.dart';
 import 'package:chef_gram/screens/user_profile/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
@@ -425,25 +426,10 @@ class _DashboardState extends State<Dashboard> {
                                       color: Colors.blue,
                                       icon: Icons.add,
                                       onTap: () async {
-                                        print("Called");
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                          content: Text(
-                                              "Checking Location. Please wait..."),
-                                          backgroundColor: Colors.blue,
-                                        ));
-                                        print("Called2");
+                                        Loader.show(context);
                                         await _determinePosition()
                                             .then((value) {
-                                          ScaffoldMessenger.of(context)
-                                              .hideCurrentSnackBar();
-                                          print(Geolocator.distanceBetween(
-                                              value.latitude,
-                                              value.longitude,
-                                              snapshot.data[index]['latitude'],
-                                              snapshot.data[index]
-                                                  ['longitude']));
-                                          print("Called3");
+                                          Loader.hide();
                                           if (Geolocator.distanceBetween(
                                                   value.latitude,
                                                   value.longitude,
@@ -505,16 +491,10 @@ class _DashboardState extends State<Dashboard> {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(snackBar);
                                         } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                            content: Text(
-                                                "Checking Location. Please wait..."),
-                                            backgroundColor: Colors.blue,
-                                          ));
+                                          Loader.show(context);
                                           await _determinePosition()
                                               .then((value) {
-                                            ScaffoldMessenger.of(context)
-                                                .hideCurrentSnackBar();
+                                            Loader.hide();
                                             if (Geolocator.distanceBetween(
                                                     value.latitude,
                                                     value.longitude,
@@ -565,7 +545,59 @@ class _DashboardState extends State<Dashboard> {
 void onSelected(BuildContext context, int item) {
   switch (item) {
     case 0:
-      Provider.of<DatabaseService>(context, listen: false).resetBeatDate();
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Warning",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Center(
+                    child: Text(
+                      "Are you sure you want reset your beat?",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      "This will clear all taken order for the selected beat for today!!",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 2.h,
+                  ),
+                  Text(
+                    "This action cannot be undone!",
+                    textAlign: TextAlign.center,
+                  )
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text("No"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              ElevatedButton(
+                child: Text("Yes"),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Provider.of<DatabaseService>(context, listen: false)
+                      .resetBeatDate();
+                },
+              ),
+            ],
+          );
+        },
+      );
       break;
     case 1:
       if (!Provider.of<Profile>(context, listen: false).hasDayEnded) {

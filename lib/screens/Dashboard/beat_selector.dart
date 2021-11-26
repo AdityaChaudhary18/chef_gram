@@ -2,6 +2,7 @@ import 'package:chef_gram/models/profile_model.dart';
 import 'package:chef_gram/screens/Dashboard/dashboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../database_service.dart';
@@ -246,9 +247,17 @@ class _BeatSelectorState extends State<BeatSelector> {
                         child: Text("Set Target"),
                         onPressed: () {
                           if (state != null && city != null && beat != null) {
+                            Loader.show(context);
                             context
                                 .read<DatabaseService>()
                                 .updateTodayTarget(state, city, beat);
+                            Loader.hide();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("Select all fields first!"),
+                              backgroundColor: Colors.blue,
+                              duration: Duration(seconds: 3),
+                            ));
                           }
                         },
                       ),

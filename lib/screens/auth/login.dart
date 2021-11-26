@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:provider/src/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:chef_gram/utils/RoundedButton.dart';
@@ -59,9 +60,11 @@ class _LogInPageState extends State<LogInPage> {
                   child: RoundedButton(
                     color: Color(0xFF004AAD),
                     onPressed: () {
+                      Loader.show(context);
                       context.read<AuthenticationService>().signIn(
                           number: phoneNoController.text.trim(),
                           password: passwordController.text.trim());
+                      Loader.hide();
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) => MyApp()));
                     },
