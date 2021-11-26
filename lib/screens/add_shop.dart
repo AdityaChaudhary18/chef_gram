@@ -184,6 +184,7 @@ class _AddShopState extends State<AddShop> {
     emailController.dispose();
     addressController.dispose();
     phoneNoController.dispose();
+    Loader.hide();
     super.dispose();
   }
 

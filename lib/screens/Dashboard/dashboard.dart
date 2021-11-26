@@ -204,6 +204,12 @@ class _DashboardState extends State<Dashboard> {
   }
 
   @override
+  void dispose() {
+    Loader.hide();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     void _showDialog(String shopName, String shopOwner, String address,
         String PhoneNo, String email) {
@@ -429,7 +435,10 @@ class _DashboardState extends State<Dashboard> {
                                         Loader.show(context);
                                         await _determinePosition()
                                             .then((value) {
-                                          Loader.hide();
+                                          if (mounted) {
+                                            Loader.hide();
+                                          }
+
                                           if (Geolocator.distanceBetween(
                                                   value.latitude,
                                                   value.longitude,

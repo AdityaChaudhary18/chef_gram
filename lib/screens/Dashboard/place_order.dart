@@ -2,6 +2,7 @@ import 'package:chef_gram/models/orderModel.dart';
 import 'package:chef_gram/models/profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -40,7 +41,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
             'users/${Provider.of<DatabaseService>(context, listen: false).uid}')
         .update({
       "targetData.shopsToVisit": visits,
-      "targetData.todaySale": doc.get('targetData.todaySale') + widget.order.total
+      "targetData.todaySale":
+          doc.get('targetData.todaySale') + widget.order.total
     });
   }
 
@@ -73,6 +75,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
         ),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      Loader.hide();
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) => BeatSelector(),
@@ -89,6 +92,12 @@ class _PlaceOrderState extends State<PlaceOrder> {
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
+  }
+
+  @override
+  void dispose() {
+    Loader.hide();
+    super.dispose();
   }
 
   @override
@@ -258,16 +267,16 @@ class _PlaceOrderState extends State<PlaceOrder> {
                             ),
                             onPressed: () {
                               if (widget.order.order.length > 0) {
+                                Loader.show(context);
                                 placeOrder();
                                 orderIsConfirmed();
                               } else {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
-                                  content: Text(
-                                      "You cannot place empty order."),
+                                  content:
+                                      Text("You cannot place empty order."),
                                   backgroundColor: Colors.red,
-                                  duration:
-                                  Duration(milliseconds: 3000),
+                                  duration: Duration(milliseconds: 3000),
                                 ));
                               }
                             },

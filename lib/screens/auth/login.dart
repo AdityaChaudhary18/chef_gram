@@ -20,6 +20,14 @@ class _LogInPageState extends State<LogInPage> {
   final passwordController = TextEditingController();
 
   @override
+  void dispose() {
+    Loader.hide();
+    phoneNoController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
