@@ -257,8 +257,19 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               primary: Colors.green,
                             ),
                             onPressed: () {
-                              placeOrder();
-                              orderIsConfirmed();
+                              if (widget.order.order.length > 0) {
+                                placeOrder();
+                                orderIsConfirmed();
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(
+                                      "You cannot place empty order."),
+                                  backgroundColor: Colors.red,
+                                  duration:
+                                  Duration(milliseconds: 3000),
+                                ));
+                              }
                             },
                             child: Icon(Icons.check),
                           ),

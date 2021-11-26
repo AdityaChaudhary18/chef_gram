@@ -69,10 +69,6 @@ class _EndDayState extends State<EndDay> {
 
   @override
   Widget build(BuildContext context) {
-    // if (Provider.of<Profile>(context, listen: true).hasDayEnded) {
-    //   Navigator.pop(context);
-    //   return MyApp();
-    // }
     return Scaffold(
       backgroundColor: Colors.indigo.shade50,
       appBar: AppBar(

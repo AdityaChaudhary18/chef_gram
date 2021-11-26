@@ -2,6 +2,7 @@ import 'package:chef_gram/database_service.dart';
 import 'package:chef_gram/models/orderModel.dart';
 import 'package:chef_gram/models/profile_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -19,7 +20,6 @@ class _TakeOrderState extends State<TakeOrder> {
 
   @override
   void initState() {
-    print(widget.shopDetails);
     order = new Order(
         customerName: widget.shopDetails['shopOwner'],
         shopName: widget.shopDetails['shopName'],
@@ -147,7 +147,7 @@ class _TakeOrderState extends State<TakeOrder> {
                                           textAlign: TextAlign.center,
                                           onChanged: (value) {
                                             item.itemsOrdered =
-                                                int.parse(value);
+                                                double.parse(value).toInt();
                                           },
                                         ),
                                       ),
