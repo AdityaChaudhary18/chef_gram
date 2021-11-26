@@ -1,6 +1,7 @@
 import 'package:chef_gram/models/profile_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -171,6 +172,7 @@ class _AddShopState extends State<AddShop> {
           .doc(Provider.of<DatabaseService>(context, listen: false).uid)
           .update({'targetData.shopsToVisit': shopsToVisit});
       Provider.of<DatabaseService>(context, listen: false).clearShopsToVisit();
+      Loader.hide();
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => MyApp()));
     });
@@ -254,6 +256,7 @@ class _AddShopState extends State<AddShop> {
             ElevatedButton(
               child: Text("Add Shop"),
               onPressed: () async {
+                Loader.show(context);
                 location = await _determinePosition();
                 addShop();
               },
