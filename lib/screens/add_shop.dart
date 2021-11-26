@@ -18,6 +18,7 @@ class AddShop extends StatefulWidget {
 }
 
 class _AddShopState extends State<AddShop> {
+  final formGlobalKey = GlobalKey<FormState>();
   late var location;
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
@@ -197,77 +198,108 @@ class _AddShopState extends State<AddShop> {
         title: Text("Add Shop to $beat"),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 10.h,
-            ),
-            TextFormField(
-              controller: shopNameController,
-              decoration: authTextFieldDecoration.copyWith(
-                labelText: "Shop Name",
-                hintText: "Enter Shop's Name",
+        child: Form(
+          key: formGlobalKey,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 10.h,
               ),
-            ),
-            SizedBox(
-              height: 2.h,
-            ),
-            TextFormField(
-              controller: ownerNameController,
-              decoration: authTextFieldDecoration.copyWith(
-                labelText: "Owner Name",
-                hintText: "Enter Owner's Name",
+              TextFormField(
+                controller: shopNameController,
+                decoration: authTextFieldDecoration.copyWith(
+                  labelText: "Shop Name",
+                  hintText: "Enter Shop's Name",
+                ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
               ),
-            ),
-            SizedBox(
-              height: 2.h,
-            ),
-            TextFormField(
-              keyboardType: TextInputType.number,
-              controller: phoneNoController,
-              decoration: authTextFieldDecoration.copyWith(
-                labelText: "Phone Number",
-                hintText: "Enter Shop Owner's Phone Number",
+              SizedBox(
+                height: 2.h,
               ),
-            ),
-            SizedBox(
-              height: 2.h,
-            ),
-            TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              controller: emailController,
-              decoration: authTextFieldDecoration.copyWith(
-                labelText: "Email",
-                hintText: "Enter Email Address",
+              TextFormField(
+                controller: ownerNameController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+                decoration: authTextFieldDecoration.copyWith(
+                  labelText: "Owner Name",
+                  hintText: "Enter Owner's Name",
+                ),
               ),
-            ),
-            SizedBox(
-              height: 2.h,
-            ),
-            TextFormField(
-              controller: addressController,
-              decoration: authTextFieldDecoration.copyWith(
-                labelText: "Address",
-                hintText: "Enter shop Address",
+              SizedBox(
+                height: 2.h,
               ),
-            ),
-            SizedBox(
-              height: 2.h,
-            ),
-            ElevatedButton(
-              child: Text("Add Shop"),
-              onPressed: () async {
-                Loader.show(context);
-                location = await _determinePosition();
-                addShop();
-              },
-            ),
-            Text(
-              "Add shop only when you are at the location.",
-              style: TextStyle(color: Colors.red),
-              textAlign: TextAlign.center,
-            )
-          ],
+              TextFormField(
+                maxLength: 10,
+                keyboardType: TextInputType.number,
+                controller: phoneNoController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter phone number';
+                  }
+                  return null;
+                },
+                decoration: authTextFieldDecoration.copyWith(
+                  labelText: "Phone Number",
+                  hintText: "Enter Shop Owner's Phone Number",
+                ),
+              ),
+              SizedBox(
+                height: 2.h,
+              ),
+              TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                controller: emailController,
+                decoration: authTextFieldDecoration.copyWith(
+                  labelText: "Email",
+                  hintText: "Enter Email Address",
+                ),
+              ),
+              SizedBox(
+                height: 2.h,
+              ),
+              TextFormField(
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter address';
+                  }
+                  return null;
+                },
+                controller: addressController,
+                decoration: authTextFieldDecoration.copyWith(
+                  labelText: "Address",
+                  hintText: "Enter shop Address",
+                ),
+              ),
+              SizedBox(
+                height: 2.h,
+              ),
+              ElevatedButton(
+                child: Text("Add Shop"),
+                onPressed: () async {
+                  if (formGlobalKey.currentState!.validate()) {
+                    formGlobalKey.currentState!.save();
+                    Loader.show(context);
+                    location = await _determinePosition();
+                    addShop();
+                  }
+                },
+              ),
+              Text(
+                "Add shop only when you are at the location.",
+                style: TextStyle(color: Colors.red),
+                textAlign: TextAlign.center,
+              )
+            ],
+          ),
         ),
       ),
     );
