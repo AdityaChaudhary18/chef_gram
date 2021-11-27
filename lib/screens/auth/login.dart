@@ -114,31 +114,18 @@ class _LogInPageState extends State<LogInPage> {
                             alignment: Alignment.center,
                             child: RoundedButton(
                               color: Color(0xFF004AAD),
-                              onPressed: () async {
+                              onPressed: () {
                                 if (formGlobalKey.currentState!.validate()) {
                                   formGlobalKey.currentState!.save();
 
-                                  await context
-                                      .read<AuthenticationService>()
-                                      .signIn(
-                                          number: phoneNoController.text.trim(),
-                                          password:
-                                              passwordController.text.trim())
-                                      .then((value) {
-                                    if (value == 'Signed In Successfully') {
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => MyApp()));
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                        content: Text(value),
-                                        backgroundColor: Colors.red,
-                                        duration: Duration(milliseconds: 4000),
-                                      ));
-                                    }
-                                  });
+                                  context.read<AuthenticationService>().signIn(
+                                      number: phoneNoController.text.trim(),
+                                      password: passwordController.text.trim());
+
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MyApp()));
                                 }
                               },
                               text: "LOG IN",
