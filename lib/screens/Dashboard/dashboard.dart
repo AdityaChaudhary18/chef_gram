@@ -211,16 +211,6 @@ class _DashboardState extends State<Dashboard> {
     super.dispose();
   }
 
-  // @override
-  // void initState() {
-  //   if (FirebaseAuth.instance.currentUser!.uid !=
-  //       Provider.of<DatabaseService>(context, listen: false).uid) {
-  //     Navigator.pushReplacement(
-  //         context, MaterialPageRoute(builder: (context) => MyApp()));
-  //   }
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     void _showDialog(String shopName, String shopOwner, String address,
@@ -638,56 +628,11 @@ void onSelected(BuildContext context, int item) {
       break;
     case 1:
       if (!Provider.of<Profile>(context, listen: false).hasDayEnded) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(
-                "Warning",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    Center(
-                      child: Text(
-                        "Are you sure you want to end your day?",
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Text(
-                      "This action cannot be undone!",
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                ElevatedButton(
-                  child: Text("No"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ElevatedButton(
-                  child: Text("Yes"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EndDay(),
-                        ));
-                  },
-                ),
-              ],
-            );
-          },
-        );
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EndDay(),
+            ));
       } else {
         showDialog(
           context: context,

@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'models/profile_model.dart';
 
 class DatabaseService {
-  final String uid;
+  String uid;
 
   DatabaseService({
     required this.uid,
@@ -23,7 +24,10 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('shops');
 
   Stream<Profile> get profile {
-    return _profileCollection.doc(uid).snapshots().map(_profileFromSnapshot);
+    return _profileCollection
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .snapshots()
+        .map(_profileFromSnapshot);
   }
 
   Profile _profileFromSnapshot(DocumentSnapshot snapshot) {
@@ -72,7 +76,7 @@ class DatabaseService {
       shopData['comment'] = 'Not Visited';
       shopsToVisit.add(shopData);
     }
-    _profileCollection.doc(uid).update({
+    _profileCollection.doc(FirebaseAuth.instance.currentUser!.uid).update({
       'hasDayEnded': false,
       'targetData': {
         'todaySale': 0,
@@ -106,8 +110,11 @@ class DatabaseService {
   }
 
   void resetBeatDate() {
-    FirebaseFirestore.instance.collection('users').doc(uid).update(
-        {"timeTargetUpdated": DateTime.now().subtract(Duration(days: 1))});
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update(
+            {"timeTargetUpdated": DateTime.now().subtract(Duration(days: 1))});
   }
 
   void clearShopsToVisit() {
