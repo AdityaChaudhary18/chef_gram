@@ -130,7 +130,6 @@ class _LogInPageState extends State<LogInPage> {
                                             if (value !=
                                                 "Signed In Successfully")
                                               {
-                                                print("HI: $value"),
                                                 Loader.hide(),
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(SnackBar(
