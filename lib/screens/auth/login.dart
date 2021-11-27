@@ -121,11 +121,6 @@ class _LogInPageState extends State<LogInPage> {
                                   context.read<AuthenticationService>().signIn(
                                       number: phoneNoController.text.trim(),
                                       password: passwordController.text.trim());
-
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => MyApp()));
                                 }
                               },
                               text: "LOG IN",
