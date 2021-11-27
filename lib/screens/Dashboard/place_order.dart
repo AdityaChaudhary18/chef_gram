@@ -266,7 +266,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               primary: Colors.green,
                             ),
                             onPressed: () {
-                              if (widget.order.order.length > 0) {
+                              if (widget.order.total > 0) {
                                 Loader.show(context);
                                 placeOrder();
                                 orderIsConfirmed();
