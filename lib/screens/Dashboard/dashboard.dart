@@ -142,7 +142,6 @@ class _DashboardState extends State<Dashboard> {
     }
 
     return await Geolocator.getCurrentPosition(
-        forceAndroidLocationManager: true,
         desiredAccuracy: LocationAccuracy.high);
   }
 
@@ -666,6 +665,7 @@ void onSelected(BuildContext context, int item) {
       break;
     case 2:
       context.read<AuthenticationService>().signOut();
+
       break;
   }
 }

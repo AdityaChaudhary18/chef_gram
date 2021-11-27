@@ -1,5 +1,4 @@
 import 'package:chef_gram/models/profile_model.dart';
-import 'package:chef_gram/screens/Dashboard/dashboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -49,22 +48,34 @@ class _EndDayState extends State<EndDay> {
   }
 
   void endDay() async {
-    final DateFormat formatter = DateFormat('dd-MM-yyyy');
-    Map<String, dynamic> data = {
-      "dateTimeSubmitted": DateTime.now(),
-      "date": formatter.format(Provider.of<Profile>(context, listen: false)
-          .timeTargetUpdated!
-          .toDate()),
-      "name": Provider.of<Profile>(context, listen: false).name,
-      "shopDetails": shopDetails,
-      "totalSale":
-          Provider.of<Profile>(context, listen: false).targetData!['todaySale']
-    };
-    await FirebaseFirestore.instance.collection('daily-reports').add(data);
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(Provider.of<DatabaseService>(context, listen: false).uid)
-        .update({"hasDayEnded": true});
+    try {
+      final DateFormat formatter = DateFormat('dd-MM-yyyy');
+      Map<String, dynamic> data = {
+        "dateTimeSubmitted": DateTime.now(),
+        "date": formatter.format(Provider.of<Profile>(context, listen: false)
+            .timeTargetUpdated!
+            .toDate()),
+        "name": Provider.of<Profile>(context, listen: false).name,
+        "shopDetails": shopDetails,
+        "totalSale": Provider.of<Profile>(context, listen: false)
+            .targetData!['todaySale']
+      };
+      await FirebaseFirestore.instance.collection('daily-reports').add(data);
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(Provider.of<DatabaseService>(context, listen: false).uid)
+          .update({"hasDayEnded": true}).then((value) => {
+                Navigator.pop(context),
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) => MyApp()))
+              });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 3000),
+      ));
+    }
   }
 
   @override
@@ -174,7 +185,6 @@ class _EndDayState extends State<EndDay> {
                     child: Text("End Day"),
                     onPressed: () {
                       endDay();
-                      Navigator.pop(context);
                     },
                   ),
                 ),

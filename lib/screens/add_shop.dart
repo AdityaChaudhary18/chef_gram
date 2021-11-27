@@ -26,6 +26,7 @@ class _AddShopState extends State<AddShop> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
+      Loader.hide();
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -59,8 +60,11 @@ class _AddShopState extends State<AddShop> {
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
+      Loader.hide();
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
+        Loader.hide();
+
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -94,6 +98,8 @@ class _AddShopState extends State<AddShop> {
     }
 
     if (permission == LocationPermission.deniedForever) {
+      Loader.hide();
+
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -129,7 +135,6 @@ class _AddShopState extends State<AddShop> {
     }
 
     return await Geolocator.getCurrentPosition(
-        forceAndroidLocationManager: true,
         desiredAccuracy: LocationAccuracy.high);
   }
 
@@ -174,6 +179,7 @@ class _AddShopState extends State<AddShop> {
           .update({'targetData.shopsToVisit': shopsToVisit});
       Provider.of<DatabaseService>(context, listen: false).clearShopsToVisit();
       Loader.hide();
+      Navigator.pop(context);
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => MyApp()));
     });
