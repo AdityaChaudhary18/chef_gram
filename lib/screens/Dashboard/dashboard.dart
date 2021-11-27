@@ -35,6 +35,7 @@ class _DashboardState extends State<Dashboard> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
+      Loader.hide();
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -68,8 +69,10 @@ class _DashboardState extends State<Dashboard> {
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
+      Loader.hide();
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
+        Loader.hide();
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -103,6 +106,7 @@ class _DashboardState extends State<Dashboard> {
     }
 
     if (permission == LocationPermission.deniedForever) {
+      Loader.hide();
       showDialog(
         context: context,
         builder: (BuildContext context) {
