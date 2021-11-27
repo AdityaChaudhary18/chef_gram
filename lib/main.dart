@@ -5,6 +5,7 @@ import 'package:chef_gram/screens/auth/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -12,6 +13,10 @@ import 'models/profile_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp,
+  ]);
   await Firebase.initializeApp();
   Provider.debugCheckInvalidValueType = null;
   runApp(const MyApp());
@@ -38,7 +43,13 @@ class MyApp extends StatelessWidget {
         ),
         StreamProvider(
           create: (context) => context.read<DatabaseService>().profile,
-          initialData: Profile(name: '', age: 0, monthlyTarget: 60000, role: 'employee', phoneNo: '', hasDayEnded: false),
+          initialData: Profile(
+              name: '',
+              age: 0,
+              monthlyTarget: 60000,
+              role: 'employee',
+              phoneNo: '',
+              hasDayEnded: false),
         ),
       ],
       child: Sizer(builder: (context, orientation, deviceTye) {

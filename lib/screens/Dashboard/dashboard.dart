@@ -1,5 +1,4 @@
 import 'package:chef_gram/models/profile_model.dart';
-import 'package:chef_gram/screens/auth/login.dart';
 import 'package:chef_gram/screens/user_profile/end_day.dart';
 import 'package:chef_gram/screens/user_profile/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';

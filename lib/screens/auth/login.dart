@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:provider/src/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:chef_gram/utils/RoundedButton.dart';
@@ -24,6 +25,7 @@ class _LogInPageState extends State<LogInPage> {
   void dispose() {
     phoneNoController.dispose();
     passwordController.dispose();
+    Loader.hide();
     super.dispose();
   }
 
@@ -114,13 +116,31 @@ class _LogInPageState extends State<LogInPage> {
                             alignment: Alignment.center,
                             child: RoundedButton(
                               color: Color(0xFF004AAD),
-                              onPressed: () {
+                              onPressed: () async {
                                 if (formGlobalKey.currentState!.validate()) {
                                   formGlobalKey.currentState!.save();
-
-                                  context.read<AuthenticationService>().signIn(
-                                      number: phoneNoController.text.trim(),
-                                      password: passwordController.text.trim());
+                                  Loader.show(context);
+                                  await context
+                                      .read<AuthenticationService>()
+                                      .signIn(
+                                          number: phoneNoController.text.trim(),
+                                          password:
+                                              passwordController.text.trim())
+                                      .then((value) => {
+                                            if (value !=
+                                                "Signed In Successfully")
+                                              {
+                                                print("HI: $value"),
+                                                Loader.hide(),
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                  content: Text(value),
+                                                  backgroundColor: Colors.red,
+                                                  duration: Duration(
+                                                      milliseconds: 3000),
+                                                ))
+                                              }
+                                          });
                                 }
                               },
                               text: "LOG IN",

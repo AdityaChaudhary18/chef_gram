@@ -98,75 +98,78 @@ class _EndDayState extends State<EndDay> {
                     child: CircularProgressIndicator(),
                   );
                 } else {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.15),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: Offset(
-                                      0, 3), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 2.w, vertical: 1.h),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundColor: snapshot.data[index]
-                                            ['isVisited']
-                                        ? snapshot.data[index]
-                                                ["orderSuccessful"]
-                                            ? Colors.green
-                                            : Colors.deepPurple
-                                        : Colors.red,
-                                    child: Icon(snapshot.data[index]
-                                            ['isVisited']
-                                        ? snapshot.data[index]
-                                                ["orderSuccessful"]
-                                            ? FontAwesomeIcons.checkDouble
-                                            : Icons.check
-                                        : Icons.clear),
-                                    foregroundColor: Colors.white,
+                  return Container(
+                    height: 70.h,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.15),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: Offset(
+                                        0, 3), // changes position of shadow
                                   ),
-                                  title: Text(
-                                    snapshot.data[index]['shopName'],
-                                    style: TextStyle(fontSize: 18.sp),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 2.w, vertical: 1.h),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        snapshot.data[index]['shopOwner'],
-                                        style: TextStyle(fontSize: 12.sp),
-                                      ),
-                                      Text(
-                                        snapshot.data[index]['comment'],
-                                        style: TextStyle(fontSize: 10.sp),
-                                      )
-                                    ],
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundColor: snapshot.data[index]
+                                              ['isVisited']
+                                          ? snapshot.data[index]
+                                                  ["orderSuccessful"]
+                                              ? Colors.green
+                                              : Colors.deepPurple
+                                          : Colors.red,
+                                      child: Icon(snapshot.data[index]
+                                              ['isVisited']
+                                          ? snapshot.data[index]
+                                                  ["orderSuccessful"]
+                                              ? FontAwesomeIcons.checkDouble
+                                              : Icons.check
+                                          : Icons.clear),
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    title: Text(
+                                      snapshot.data[index]['shopName'],
+                                      style: TextStyle(fontSize: 18.sp),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          snapshot.data[index]['shopOwner'],
+                                          style: TextStyle(fontSize: 12.sp),
+                                        ),
+                                        Text(
+                                          snapshot.data[index]['comment'],
+                                          style: TextStyle(fontSize: 10.sp),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    },
+                          ],
+                        );
+                      },
+                    ),
                   );
                 }
               },
