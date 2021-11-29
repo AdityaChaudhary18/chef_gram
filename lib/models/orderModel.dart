@@ -26,7 +26,7 @@ class Order {
 
   Function? viewOrder() {
     int totalMoney = 0;
-    this.order.removeWhere((element) => element.itemsOrdered == 0);
+    this.order.removeWhere((element) => element.itemsOrdered <= 0);
     this.order.forEach(
       (element) {
         totalMoney += element.itemsOrdered * element.price;
