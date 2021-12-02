@@ -135,6 +135,7 @@ class _AddShopState extends State<AddShop> {
     }
 
     return await Geolocator.getCurrentPosition(
+        forceAndroidLocationManager: true,
         desiredAccuracy: LocationAccuracy.high);
   }
 

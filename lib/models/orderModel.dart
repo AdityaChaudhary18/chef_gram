@@ -20,6 +20,7 @@ class Order {
   String shopName = 'unknown';
   String address = 'unknown';
   String shopRef = 'unknown';
+
   Function? addToOrder(OrderItem item) {
     this.order.add(item);
   }

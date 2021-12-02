@@ -141,6 +141,7 @@ class _DashboardState extends State<Dashboard> {
     }
 
     return await Geolocator.getCurrentPosition(
+        forceAndroidLocationManager: true,
         desiredAccuracy: LocationAccuracy.high);
   }
 

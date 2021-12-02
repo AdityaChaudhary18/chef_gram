@@ -49,7 +49,8 @@ class MyApp extends StatelessWidget {
               monthlyTarget: 60000,
               role: 'employee',
               phoneNo: '',
-              hasDayEnded: false),
+              hasDayEnded: false,
+              isActive: true),
         ),
       ],
       child: Sizer(builder: (context, orientation, deviceTye) {

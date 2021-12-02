@@ -34,6 +34,7 @@ class DatabaseService {
     shopsToVisit = snapshot.get('targetData.shopsToVisit') ?? [];
     return Profile(
       name: snapshot.get('name') ?? '',
+      isActive: snapshot.get('isActive') ?? true,
       age: snapshot.get('age') ?? '',
       monthlyTarget: snapshot.get('monthlyTarget') ?? 0,
       targetData: snapshot.get('targetData') ?? {},
