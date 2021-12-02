@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 
 class AuthenticationService with ChangeNotifier {
   final FirebaseAuth _firebaseAuth;
@@ -23,7 +22,7 @@ class AuthenticationService with ChangeNotifier {
           .doc(_firebaseAuth.currentUser!.uid)
           .get()
           .then((value) {
-        if (value.get('role') == 'employee') {
+        if (value.get('role') == 'employee' && value.get('isActive') == true) {
         } else {
           signOut();
         }

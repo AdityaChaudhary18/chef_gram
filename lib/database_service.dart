@@ -17,12 +17,6 @@ class DatabaseService {
   static CollectionReference _profileCollection =
       FirebaseFirestore.instance.collection('users');
 
-  static CollectionReference _beatCollection =
-      FirebaseFirestore.instance.collection('beats');
-
-  static CollectionReference _shopCollection =
-      FirebaseFirestore.instance.collection('shops');
-
   Stream<Profile> get profile {
     return _profileCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -39,7 +33,7 @@ class DatabaseService {
       monthlyTarget: snapshot.get('monthlyTarget') ?? 0,
       targetData: snapshot.get('targetData') ?? {},
       role: snapshot.get('role'),
-      phoneNo: snapshot.get('phoneNo') ?? '',
+      phoneNo: snapshot.get('phoneNo') ?? 0,
       hasDayEnded: snapshot.get('hasDayEnded') ?? false,
       timeTargetUpdated: snapshot.get('timeTargetUpdated') ??
           DateTime.now().subtract(Duration(days: 1)),

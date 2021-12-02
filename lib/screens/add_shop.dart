@@ -157,7 +157,8 @@ class _AddShopState extends State<AddShop> {
       "shopName": shopNameController.value.text,
       "shopOwner": ownerNameController.value.text,
       'latitude': location.latitude,
-      'longitude': location.longitude
+      'longitude': location.longitude,
+      'isLocationMandatory': true,
     };
     var id = '';
     CollectionReference shops = FirebaseFirestore.instance.collection('shops');

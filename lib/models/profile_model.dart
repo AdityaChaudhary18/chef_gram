@@ -6,7 +6,7 @@ class Profile {
   int monthlyTarget;
   String role;
   Timestamp? timeTargetUpdated;
-  String phoneNo;
+  int phoneNo;
   bool hasDayEnded;
   bool isActive;
   Map<String, dynamic>? targetData;

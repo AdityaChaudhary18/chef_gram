@@ -164,6 +164,7 @@ class _DashboardState extends State<Dashboard> {
         'shopRef': shop['shopRef'],
         'address': shopInfo[i]["address"],
         'phoneNo': shopInfo[i]["phoneNo"],
+        'isLocationMandatory': shopInfo[i]['isLocationMandatory'],
         "email": shopInfo[i]["email"],
         'orderSuccessful': shop['orderSuccessful'],
         'latitude': shopInfo[i]['latitude'],
@@ -451,8 +452,12 @@ class _DashboardState extends State<Dashboard> {
                                                 if (mounted) {
                                                   Loader.hide();
                                                 }
-
-                                                if (Geolocator.distanceBetween(
+                                                if (snapshot.data[index]['isLocationMandatory'] == false) {
+                                                  Loader.hide();
+                                                  Navigator.push(context, MaterialPageRoute(
+                                                        builder: (context) => TakeOrder(shopDetails: snapshot.data[index])),
+                                                  );
+                                                } else if (Geolocator.distanceBetween(
                                                         value.latitude,
                                                         value.longitude,
                                                         snapshot.data[index]

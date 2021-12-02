@@ -6,7 +6,6 @@ import 'package:chef_gram/utils/RoundedButton.dart';
 
 import '../../authentication_service.dart';
 import '../../constants.dart';
-import '../../main.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({Key? key}) : super(key: key);

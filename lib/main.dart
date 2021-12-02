@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
               age: 0,
               monthlyTarget: 60000,
               role: 'employee',
-              phoneNo: '',
+              phoneNo: 0,
               hasDayEnded: false,
               isActive: true),
         ),
