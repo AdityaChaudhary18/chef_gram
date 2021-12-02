@@ -153,7 +153,7 @@ class _AddShopState extends State<AddShop> {
       "address": addressController.value.text,
       "email": emailController.value.text,
       "beat": Provider.of<Profile>(context, listen: false).targetData!['beat'],
-      "phoneNo": phoneNoController.value.text,
+      "phoneNo": double.parse(phoneNoController.value.text).toInt(),
       "shopName": shopNameController.value.text,
       "shopOwner": ownerNameController.value.text,
       'latitude': location.latitude,

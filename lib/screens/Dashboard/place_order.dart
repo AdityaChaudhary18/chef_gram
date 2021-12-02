@@ -49,7 +49,9 @@ class _PlaceOrderState extends State<PlaceOrder> {
   Future<void> placeOrder() async {
     List<Map<String, dynamic>> items = [];
     widget.order.order.forEach((element) {
-      items.add(element.toMap());
+      if (element.itemsOrdered != 0) {
+        items.add(element.toMap());
+      }
     });
     var orderData = {
       "isConfirmed": false,
@@ -182,55 +184,59 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   child: ListView.builder(
                       itemCount: widget.order.order.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: EdgeInsets.all(2.w),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5.0),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                        return (widget.order.order[index].itemsOrdered == 0)
+                            ? SizedBox(
+                                height: 0,
+                              )
+                            : Padding(
+                                padding: EdgeInsets.all(2.w),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                      width: 2,
+                                    ),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(5.0),
+                                    ),
+                                  ),
+                                  child: Row(
                                     children: [
-                                      Text(
-                                        widget.order.order[index].name,
-                                        style: TextStyle(
-                                            fontSize: 13.sp,
-                                            fontWeight: FontWeight.bold),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              widget.order.order[index].name,
+                                              style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              "${widget.order.order[index].quantity.toString()} g",
+                                              style: TextStyle(fontSize: 12.sp),
+                                            ),
+                                            Text(
+                                              "Rs.${widget.order.order[index].price.toString()}",
+                                              style: TextStyle(fontSize: 12.sp),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      Text(
-                                        "${widget.order.order[index].quantity.toString()} g",
-                                        style: TextStyle(fontSize: 12.sp),
-                                      ),
-                                      Text(
-                                        "Rs.${widget.order.order[index].price.toString()}",
-                                        style: TextStyle(fontSize: 12.sp),
-                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 4.w),
+                                        child: Text(
+                                          "*${widget.order.order[index].itemsOrdered.toString()}",
+                                          style: TextStyle(
+                                            fontSize: 20.sp,
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 4.w),
-                                  child: Text(
-                                    "*${widget.order.order[index].itemsOrdered.toString()}",
-                                    style: TextStyle(
-                                      fontSize: 20.sp,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
+                              );
                       }),
                 ),
                 Padding(
