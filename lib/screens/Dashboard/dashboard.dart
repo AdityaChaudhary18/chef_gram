@@ -141,7 +141,6 @@ class _DashboardState extends State<Dashboard> {
     }
 
     return await Geolocator.getCurrentPosition(
-        forceAndroidLocationManager: true,
         desiredAccuracy: LocationAccuracy.high);
   }
 
@@ -446,9 +445,17 @@ class _DashboardState extends State<Dashboard> {
                                             color: Colors.blue,
                                             icon: Icons.add,
                                             onTap: () async {
-                                              if (snapshot.data[index]['isLocationMandatory'] == false) {
-                                                Navigator.push(context, MaterialPageRoute(
-                                                    builder: (context) => TakeOrder(shopDetails: snapshot.data[index])),
+                                              if (snapshot.data[index]
+                                                      ['isLocationMandatory'] ==
+                                                  false) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          TakeOrder(
+                                                              shopDetails:
+                                                                  snapshot.data[
+                                                                      index])),
                                                 );
                                               } else {
                                                 Loader.show(context);
@@ -458,12 +465,12 @@ class _DashboardState extends State<Dashboard> {
                                                     Loader.hide();
                                                   }
                                                   if (Geolocator.distanceBetween(
-                                                      value.latitude,
-                                                      value.longitude,
-                                                      snapshot.data[index]
-                                                      ['latitude'],
-                                                      snapshot.data[index]
-                                                      ['longitude']) <
+                                                          value.latitude,
+                                                          value.longitude,
+                                                          snapshot.data[index]
+                                                              ['latitude'],
+                                                          snapshot.data[index]
+                                                              ['longitude']) <
                                                       100) {
                                                     Navigator.push(
                                                       context,
@@ -471,15 +478,17 @@ class _DashboardState extends State<Dashboard> {
                                                           builder: (context) =>
                                                               TakeOrder(
                                                                   shopDetails:
-                                                                  snapshot.data[
-                                                                  index])),
+                                                                      snapshot.data[
+                                                                          index])),
                                                     );
                                                   } else {
-                                                    ScaffoldMessenger.of(context)
+                                                    ScaffoldMessenger.of(
+                                                            context)
                                                         .showSnackBar(SnackBar(
                                                       content: Text(
                                                           "Get within 100 meter of location"),
-                                                      backgroundColor: Colors.red,
+                                                      backgroundColor:
+                                                          Colors.red,
                                                       duration: Duration(
                                                           milliseconds: 3000),
                                                     ));
@@ -524,16 +533,19 @@ class _DashboardState extends State<Dashboard> {
                                                 );
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(snackBar);
-                                              } else if (snapshot.data[index]['isLocationMandatory'] == false) {
+                                              } else if (snapshot.data[index]
+                                                      ['isLocationMandatory'] ==
+                                                  false) {
                                                 Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
-                                                        builder: (context) => ExcusePage(
-                                                            shopRef: snapshot
-                                                                .data[index]
-                                                            [
-                                                            'shopRef']
-                                                                .toString())));
+                                                        builder: (context) =>
+                                                            ExcusePage(
+                                                                shopRef: snapshot
+                                                                    .data[index]
+                                                                        [
+                                                                        'shopRef']
+                                                                    .toString())));
                                               } else {
                                                 Loader.show(context);
                                                 await _determinePosition()
