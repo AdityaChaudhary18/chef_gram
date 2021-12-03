@@ -41,6 +41,7 @@ class _EndDayState extends State<EndDay> {
         "email": shopInfo[i]["email"],
         "comment": shop['comment'],
         'orderSuccessful': shop['orderSuccessful'],
+        'shopId': shopInfo[i]['shopId']
       });
     }
     shopDetails = _shopDetails;
