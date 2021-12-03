@@ -161,6 +161,7 @@ class _DashboardState extends State<Dashboard> {
         "shopOwner": shopInfo[i]["shopOwner"],
         'isVisited': shop['isVisited'],
         'shopRef': shop['shopRef'],
+        'shopId': shopInfo[i]['shopId'],
         'address': shopInfo[i]["address"],
         'phoneNo': shopInfo[i]["phoneNo"],
         'isLocationMandatory': shopInfo[i]['isLocationMandatory'],

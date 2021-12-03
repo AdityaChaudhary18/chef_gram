@@ -25,6 +25,7 @@ class _TakeOrderState extends State<TakeOrder> {
         shopName: widget.shopDetails['shopName'],
         orderTakenBy: Provider.of<Profile>(context, listen: false).name,
         shopRef: widget.shopDetails["shopRef"].toString(),
+        shopId: widget.shopDetails["shopId"].toString(),
         address: widget.shopDetails['address']);
     super.initState();
   }
@@ -76,7 +77,7 @@ class _TakeOrderState extends State<TakeOrder> {
                             var document = snapshot.data[index];
                             OrderItem item = OrderItem(
                               name: document['name'],
-                              price: document['price'],
+                              price: double.parse(document['price'].toString()),
                               itemsOrdered: 0,
                               quantity: document['quantity'],
                             );

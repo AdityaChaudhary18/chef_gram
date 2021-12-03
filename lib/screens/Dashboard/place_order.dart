@@ -54,7 +54,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
       }
     });
     var orderData = {
-      "isConfirmed": false,
       'dateTime': widget.order.timeStamp.toLocal(),
       'customerName': widget.order.customerName,
       'address': widget.order.address,
@@ -66,6 +65,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
           Provider.of<Profile>(context, listen: false).targetData!['state'],
       'city': Provider.of<Profile>(context, listen: false).targetData!['city'],
       'beat': Provider.of<Profile>(context, listen: false).targetData!['beat'],
+      'shopId': widget.order.shopId
     };
     return orders.add(orderData).then((value) async {
       final snackBar = SnackBar(

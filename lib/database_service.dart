@@ -50,7 +50,11 @@ class DatabaseService {
           .get();
       List shops = beatDoc.docs;
       for (var shop in shops) {
-        _shopsInfo.add({...shop.data(), 'shopRef': 'shops/${shop.id}'});
+        _shopsInfo.add({
+          ...shop.data(),
+          'shopRef': 'shops/${shop.id}',
+          'shopId': '${shop.id}'
+        });
       }
     }
     final jsonList = _shopsInfo.map((item) => jsonEncode(item)).toList();

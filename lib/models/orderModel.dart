@@ -10,23 +10,25 @@ class Order {
       required this.shopName,
       required this.customerName,
       required this.shopRef,
+      required this.shopId,
       required this.address});
 
   List<OrderItem> order = [];
   DateTime timeStamp = DateTime.now();
-  int total = 0;
+  double total = 0;
   String orderTakenBy = "USER";
   String customerName = "Customer";
   String shopName = 'unknown';
   String address = 'unknown';
   String shopRef = 'unknown';
+  String shopId = 'unknown';
 
   Function? addToOrder(OrderItem item) {
     this.order.add(item);
   }
 
   Function? viewOrder() {
-    int totalMoney = 0;
+    double totalMoney = 0;
     this.order.removeWhere((element) => element.itemsOrdered <= 0);
     this.order.forEach(
       (element) {
@@ -39,7 +41,7 @@ class Order {
 
 class OrderItem {
   String name;
-  int price;
+  double price;
   int quantity;
   int itemsOrdered;
 
