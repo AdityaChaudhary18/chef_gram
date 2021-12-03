@@ -217,7 +217,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     void _showDialog(String shopName, String shopOwner, String address,
-        String PhoneNo, String email) {
+        int PhoneNo, String email) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -247,7 +247,7 @@ class _DashboardState extends State<Dashboard> {
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   GestureDetector(
                     child: Text(
-                      PhoneNo,
+                      PhoneNo.toString(),
                       style: TextStyle(color: Colors.blue),
                     ),
                     onTap: () => setState(() {
