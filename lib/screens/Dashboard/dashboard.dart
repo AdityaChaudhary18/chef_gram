@@ -472,7 +472,7 @@ class _DashboardState extends State<Dashboard> {
                                                               ['latitude'],
                                                           snapshot.data[index]
                                                               ['longitude']) <
-                                                      100) {
+                                                      300) {
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -559,7 +559,7 @@ class _DashboardState extends State<Dashboard> {
                                                               ['latitude'],
                                                           snapshot.data[index]
                                                               ['longitude']) <
-                                                      100) {
+                                                      300) {
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
